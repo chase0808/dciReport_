@@ -20,7 +20,7 @@
 
 
 	<bean id="summaryreportdaoservice"    
-                      class="com.dci.report.daoimpl.Summaryreportdaoserviceimpl">
+                      class="com.dci.report.impl.Summaryreportdaoserviceimpl">
                       
                       <property name="dataSource" ref="dataSource" /> 
       
