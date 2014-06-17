@@ -54,10 +54,10 @@ public class Summaryreportdaoserviceimpl implements Summaryreportdaoservice {
 		try {
 			jasperPrint = JasperFillManager
 					.fillReport(
-							"C:\\Users\\xqi\\eclipesworkspace\\jasperSpring\\test.jasper",
+							"C:\\Users\\ldong\\workspace\\jasperSpring\\test.jasper",
 							new HashMap<String, Object>(), resultSetDataSource);
 			JasperExportManager.exportReportToPdfFile(jasperPrint,
-					"C:\\Users\\xqi\\eclipesworkspace\\jasperSpring\\test.pdf");
+					"C:\\Users\\ldong\\workspace\\jasperSpring\\test.pdf");
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
