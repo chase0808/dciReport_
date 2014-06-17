@@ -7,6 +7,15 @@
 
 
 
+	<bean id="summaryreportdaoservice"    
+                      class="com.dci.report.impl.Summaryreportdaoserviceimpl">
+                      
+                      <property name="dataSource" ref="dataSource" /> 
+      
+                     
+    </bean>
+
+
 
 	<bean id="summaryreportservice" class="com.dci.report.impl.Summaryreportserviceimpl">
 		<property name="summaryreportdaoservice" ref="summaryreportdaoservice" />
@@ -18,12 +27,7 @@
 
 
 
-	<bean id="summaryreportdaoservice" class="com.dci.report.daoimpl.Summaryreportdaoserviceimpl">
 
-		<property name="dataSource" ref="dataSource" />
-
-
-	</bean>
 
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">

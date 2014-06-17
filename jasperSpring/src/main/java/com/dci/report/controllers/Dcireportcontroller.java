@@ -31,14 +31,14 @@ public class Dcireportcontroller {
 			ModelMap model) {
 		model.addAttribute("library", summaryinput.getLibrary());
 		model.addAttribute("start_date", summaryinput.getStart_date());
-		// model.addAttribute("end_date", summaryinput.getEnd_date());
+		model.addAttribute("end_date", summaryinput.getEnd_date());
 		// process info and generate report
 
-		Summaryinput summaryinput2 = new Summaryinput();
-		summaryinput2.setEnd_date("ksksks");
-		summaryinput2.setLibrary("zdbxjhf004.tcontent");
-		summaryinput2.setStart_date("20-20-20");
-		String returnVal = summaryreportservice.getSummaryreport(summaryinput2);
+		// Summaryinput summaryinput2 = new Summaryinput();
+		// summaryinput2.setEnd_date("ksksks");
+		// summaryinput2.setLibrary("zdbxjhf004.tcontent");
+		// summaryinput2.setStart_date("20-20-20");
+		String returnVal = summaryreportservice.getSummaryreport(summaryinput);
 
 		model.addAttribute("returnvalue", returnVal);
 		// respond back to the UI
