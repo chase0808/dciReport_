@@ -8,7 +8,7 @@
 <title>Form</title>
 </head>
 <body>
-	<form:form method="POST" action="/report/processdate">
+	<form:form method="POST" action="/report/processdata">
 		<table>
 			<tr>
 				<td><form:label path="type">type</form:label></td>
@@ -23,16 +23,16 @@
 				<td><form:input path="enddate" /></td>
 			</tr>
 			<tr>
-				<td><form:label path="department">department</form:label></td>
-				<td><form:input path="department" /></td>
+				<td><form:label path="para">para</form:label></td>
+				<td><form:input path="para" /></td>
 			</tr>
 			<tr>
-				<td><form:label path="department">department</form:label></td>
-				<td><form:input path="department" /></td>
+				<td><form:label path="para">para</form:label></td>
+				<td><form:input path="para" /></td>
 			</tr>
 			<tr>
-				<td><form:label path="department">department</form:label></td>
-				<td><form:input path="department" /></td>
+				<td><form:label path="para">para</form:label></td>
+				<td><form:input path="para" /></td>
 			</tr>
 			<tr>
 				<td colspan="4"><input type="submit" value="generate" /></td>

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.dci.report.homepageModule.Getinput;
+import com.dci.report.homepageModule.report;
 
 @Controller
 public class Logincontroller {
@@ -20,7 +20,7 @@ public class Logincontroller {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView loginPage(Model model) {
 		
-		return new ModelAndView("homepage","command", new Getinput());
+		return new ModelAndView("login","command", new User());
 	}
 	
 	@RequestMapping(value = "/logining", method = RequestMethod.POST)
