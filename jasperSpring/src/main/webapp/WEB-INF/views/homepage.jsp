@@ -8,7 +8,7 @@
 <title>Form</title>
 </head>
 <body>
-	<form:form method="POST" action="/report/processdata">
+	<form:form method="POST" action="/report/generate">
 		<table>
 			<tr>
 				<td><form:label path="type">type</form:label></td>
