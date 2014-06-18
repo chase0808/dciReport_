@@ -20,7 +20,6 @@ public class Dcireportcontroller {
 
 	@RequestMapping(value = "/summary", method = RequestMethod.GET)
 	public ModelAndView initSummryReport(Model model) {
-
 		// process info and generate report
 		return new ModelAndView("form", "command", new Summaryinput());
 	}
