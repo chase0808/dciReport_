@@ -59,5 +59,8 @@
 		<property name="password" value="root" />
 	</bean>
 
+	<bean id="reporthandleservice" class="com.dci.report.impl.Reporthandleserviceimpl">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
 
 </beans>

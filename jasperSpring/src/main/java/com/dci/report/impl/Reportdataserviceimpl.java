@@ -19,7 +19,6 @@ public class Reportdataserviceimpl implements Reportdataservice {
 	}
 	@Override
 	public void setReportdatasource(DataSource reportdatasource) {
-		System.out.println("In the implementation setter");
 		this.reportdatasource = reportdatasource;
 		this.jdbcTemplateObject = new JdbcTemplate(reportdatasource);
 	}
@@ -27,39 +26,45 @@ public class Reportdataserviceimpl implements Reportdataservice {
 	@Override
 	public void create(Report report) {
 		
-		System.out.println("In the create method!");
-		String SQL = "insert into report (type, startdate, enddate) values (?, ? , ?)";
+		String SQL = "insert into report(id) value (null)";
 		
-		jdbcTemplateObject.update(SQL, report.getType(), report.getStartdate(), report.getEnddate());
+		jdbcTemplateObject.update(SQL);
 		
-		SQL = "select last(id) from report";
+		SQL = "select max(id) from report";
 
 		@SuppressWarnings("deprecation")
-		int reportid = jdbcTemplateObject.queryForInt(SQL);
+		int rid = jdbcTemplateObject.queryForInt(SQL);
 		
-		SQL = "inset into para (reporid, departmentid) values (reportid, ?)";
+		SQL = "insert into para(reportid, paraid, paravalue) values (?, ?, ?)";
+		
+		jdbcTemplateObject.update(SQL, rid, 1, 1);
+		jdbcTemplateObject.update(SQL, rid, 2, report.getStartdate());
+		jdbcTemplateObject.update(SQL, rid, 3, report.getEnddate());
+		jdbcTemplateObject.update(SQL, rid, 4, report.getType());
 		ArrayList<Integer> para = report.getPara();
 		for( int i = 0; i < para.size(); i++ ) {
-			jdbcTemplateObject.update(SQL, para.get(0));
+			jdbcTemplateObject.update(SQL, rid, 5, para.get(i));
 		}
 	}
 
 	@Override
 	public Report getReport(Integer reportid) {
-		// TODO Auto-generated method stub
-		return null;
+		String SQL = "select * from report a inner join para b on a.id = b.reportid inner join lookup c on b.paraid = c.paraid where a.id = ?";
+		ArrayList<Report> reports = jdbcTemplateObject.query(SQL, new ReportExtractor(), reportid);
+		return reports.get(0);
 	}
 
 	@Override
 	public List<Report> listReport() {
-		// TODO Auto-generated method stub
-		return null;
+		String SQL = "select * from report a inner join para b on a.id = b.reportid inner join lookup c on b.paraid = c.paraid";
+		ArrayList<Report> reports = jdbcTemplateObject.query(SQL, new ReportExtractor());
+		return reports;
 	}
 
 	@Override
 	public void delete(Integer id) {
-		// TODO Auto-generated method stub
-		
+		String SQL = "delete report, para from report inner join para on id = reportid where id = ?";
+		jdbcTemplateObject.update(SQL, id);
 	}
 
 	
