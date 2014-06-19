@@ -42,13 +42,14 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/regenerate", method = RequestMethod.POST)
-	public String regenerate(Report report) {
+	public String regenerate(Report report, ModelMap model) {
+		System.out.println("I am in the regenerate!");
 		reporthandleservice.generatereport(report);
 		return "successview";
 	}
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public String delete(Report report) {
+	public String delete(Report report, ModelMap model) {
 		int reportid = report.getId();
 		reportdataservice.delete(reportid);
 		return "successview";
