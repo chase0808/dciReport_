@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -14,7 +15,11 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.dci.report.bean.Client;
 import com.dci.report.bean.Summaryinput;
+import com.dci.report.jdbc.DepartmentExtractor;
 import com.dci.report.services.Summaryreportdaoservice;
 
 public class Summaryreportdaoserviceimpl implements Summaryreportdaoservice {
@@ -72,6 +77,28 @@ public class Summaryreportdaoserviceimpl implements Summaryreportdaoservice {
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	/*
+	 * @Override public Map<String, List<Department>> getClientMap() {
+	 * Map<String, List<Department>> clientMap = new HashMap<String,
+	 * List<Department>>(); String sql =
+	 * "select * From  zdbxofi004.tclienttablelookup"; JdbcTemplate jdbcTemplate
+	 * = new JdbcTemplate(dataSource); List<Department> departmentList =
+	 * jdbcTemplate.query(sql, new DepartmentRowMapper()); departmentList =
+	 * jdbcTemplate.query(sql, new DepartmentRowMapper()); for (Department d :
+	 * departmentList) { if (!clientMap.containsKey(d.getClient())) {
+	 * List<Department> list = new ArrayList<Department>(); list.add(d);
+	 * clientMap.put(d.getClient(), list); } else {
+	 * clientMap.get(d.getClient()).add(d); } } return clientMap; }
+	 */
+	@Override
+	public List<Client> getClientMap() {
+
+		String sql = "select * From  zdbxofi004.tclienttablelookup";
+		List<Client> listofclient = new JdbcTemplate(dataSource).query(sql,
+				new DepartmentExtractor());
+		return listofclient;
 	}
 
 }
