@@ -34,6 +34,7 @@ public class HomeController {
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public ModelAndView test(Model model) {
 		Report report = reportdataservice.getReport(4);
+		reporthandleservice.generatereport(report);
 		return new ModelAndView("test","command", report);
 	}
 	
