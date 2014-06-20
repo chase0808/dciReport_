@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Test</title>
+<title>Form</title>
 </head>
 <body>
 	<form:form method="POST" action="/report/regenerate">
@@ -35,11 +35,10 @@
 				<td><form:input path="para" /></td>
 			</tr>
 			<tr>
-				<td colspan="4"><input type="submit" value="regenerate" /></td>
+				<td colspan="4"><input type="submit" value="generate" /></td>
 			</tr>
 		</table>
 	</form:form>
-	<body>
 	<form:form method="POST" action="/report/delete">
 		<table>
 			<tr>

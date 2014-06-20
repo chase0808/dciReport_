@@ -25,7 +25,10 @@ public class HomeController {
 	
 	@RequestMapping(value = "/homepage", method = RequestMethod.GET)
 	public ModelAndView homepage(Model model) {
-		return new ModelAndView("homepage","command", new Report());
+		ArrayList<Report> listreport = (ArrayList<Report>) reportdataservice.listReport();
+		ModelAndView modelandview = new ModelAndView("dashboard","command", new Report());
+		modelandview.addObject("listreport", listreport);
+		return modelandview;
 	}
 	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
@@ -44,14 +47,16 @@ public class HomeController {
 	@RequestMapping(value = "/regenerate", method = RequestMethod.POST)
 	public String regenerate(Report report, ModelMap model) {
 		System.out.println("I am in the regenerate!");
-		reporthandleservice.generatereport(report);
+		//reporthandleservice.generatereport(report);
 		return "successview";
 	}
 	
+
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String delete(Report report, ModelMap model) {
-		int reportid = report.getId();
-		reportdataservice.delete(reportid);
+		System.out.println("I am in the delete!");
+		//int reportid = report.getId();
+		//reportdataservice.delete(reportid);
 		return "successview";
 	}
 

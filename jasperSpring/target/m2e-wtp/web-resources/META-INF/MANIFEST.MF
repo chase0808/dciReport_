@@ -1,10 +1,5 @@
 Manifest-Version: 1.0
-<<<<<<< HEAD
 Built-By: ldong
 Build-Jdk: 1.7.0_60
-=======
-Built-By: xqi
-Build-Jdk: 1.7.0_55
->>>>>>> 0267bf41ef9b37302eee5f8d452d1df8055c5312
 Created-By: Maven Integration for Eclipse
 
