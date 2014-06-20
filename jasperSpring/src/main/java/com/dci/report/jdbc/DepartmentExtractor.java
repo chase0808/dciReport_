@@ -24,8 +24,6 @@ public class DepartmentExtractor implements ResultSetExtractor {
 		List<Department> deptcollection = new ArrayList<Department>();
 		while (resultSet.next()) {
 
-			System.out.println("rows" + ctr);
-
 			if (ctr == 0) {
 
 				dciclient.setClientname(resultSet.getString("FCLIENTNAME"));

@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%> 
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -17,7 +16,7 @@
     <!-- Bootstrap core CSS -->
     <link href="<c:url value = "/resources/bootstrap/css/bootstrap.min.css" />"  rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="<c:url value = "/resources/css/dashboard.css" />" rel="stylesheet">
+   <link href="<c:url value = "/resources/css/dashboard.css" />" rel="stylesheet">
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -25,9 +24,8 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  <script type="text/javascript" src="<c:url value = "/resources/js/mktree.js" />"></script>
-  <link rel="stylesheet" href="<c:url value = "/resources/css/mktree.css" />" type="text/css">   
-  
+    <script type="text/javascript" src="<c:url value = "/resources/js/mktree.js" />"></script>
+    <link rel="stylesheet" href="<c:url value = "/resources/css/mktree.css" />" type="text/css">
   </head>
   <body>
     <!-- Modal -->
@@ -39,12 +37,12 @@
             <h4 class="modal-title" id="myModalLabel">Criteria</h4>
           </div>
           <div class="modal-body ">
-            <form:form role="form" method="POST" commandname="departments" action="/report/result" >
+           <form:form role="form" method="POST" commandname="departments" action="/report/generate" >
               <div class="form-group">
-                <label for="start_date">Start Date</label>
-                <input type="date" class="form-control" id="start_date">
-                <label for="end_date">End Date</label>
-                <input type="date" class="form-control" id="end_date">
+                <form:label for="start_date" path="startdate">Start Date</form:label>
+                <form:input type="date" class="form-control" id="start_date" path="startdate"/>
+                <form:label for="end_date" path="enddate">End Date</form:label>
+                <form:input type="date" class="form-control" id="end_date" path="enddate"/>
                 
                 
                 <div class="container">
@@ -54,7 +52,7 @@
                         <div class="panel-heading">Select Client</div>
                         <div class="panel-body checkboxes">
                           <ul class="mktree" id="tree1">
-                             <c:forEach var="client"  items="${clientlist}" >
+                            <c:forEach var="client"  items="${clientlist}" >
                             <li>${client.clientname}
                               <c:forEach var="department" items="${client.departments}">
                               <ul>
@@ -62,22 +60,15 @@
                                   
                                   <label>
                                     ${department.departmentName}
-                                    <form:checkbox path="departmentIDs" value= " ${department.departmentID}"></form:checkbox>
-                                    
-                                  </label>
+                                  <form:checkbox path="para" value= " ${department.departmentID}"></form:checkbox>
                                   
-                                </li>
-                              </ul>
-                              </c:forEach>
-                            </li>
+                                </label>
+                                
+                              </li>
+                            </ul>
                             </c:forEach>
-                           
-                            
-                           
-                            
-                           
-                     
-                           
+                          </li>
+                          </c:forEach>
                           </ul>
                         </div>
                       </div>
@@ -110,7 +101,7 @@
               <button type="submit" class="btn btn-primary">Generate</button>
             </div>
           </div>
-        </form:form>
+       </form:form>
       </div>
     </div>
   </div>

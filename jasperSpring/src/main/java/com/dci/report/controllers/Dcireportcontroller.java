@@ -19,7 +19,7 @@ public class Dcireportcontroller {
 	@Autowired
 	Summaryreportservice summaryreportservice;
 
-	@RequestMapping("/homepage")
+	@RequestMapping("/homepage1")
 	public ModelAndView initHomepage() {
 
 		// process info and generate report
@@ -34,13 +34,6 @@ public class Dcireportcontroller {
 		// modelandview.addObject("list", clientList);
 
 		return modelandview;
-	}
-
-	@RequestMapping("/result")
-	public ModelAndView processRequest(@ModelAttribute Departments departments) {
-		ModelAndView modelAndView = new ModelAndView("result");
-		modelAndView.addObject("departments", departments);
-		return modelAndView;
 	}
 
 	@RequestMapping("/generateSummary")

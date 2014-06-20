@@ -7,13 +7,12 @@
 
 
 
-	<bean id="summaryreportdaoservice"    
-                      class="com.dci.report.impl.Summaryreportdaoserviceimpl">
-                      
-                      <property name="dataSource" ref="dataSource" /> 
-      
-                     
-    </bean>
+	<bean id="summaryreportdaoservice" class="com.dci.report.impl.Summaryreportdaoserviceimpl">
+
+		<property name="dataSource" ref="dataSource" />
+
+
+	</bean>
 
 
 
@@ -40,12 +39,30 @@
 	<bean id="loginservice" class="com.dci.report.loginModule.LoginServiceimpl">
 		<property name="logindaoservice" ref="logindaoservice" />
 	</bean>
-	
+
 	<bean id="logindaoservice" class="com.dci.report.loginModule.LoginDaoServiceimpl">
 		<property name="dataSource" ref="logindataSource" />
 	</bean>
+	
 	<bean id="logindataSource" class="com.dci.report.loginModule.MockDatasource">
 	</bean>
 
+	<bean id="reportdataservice" class="com.dci.report.impl.Reportdataserviceimpl">
+		<property name="reportdatasource" ref="reportdatasource"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="reportdatasource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/jasperspring" />
+		<property name="username" value="root" />
+		<property name="password" value="qixin808" />
+	</bean>
+
+	<bean id="reporthandleservice" class="com.dci.report.impl.Reporthandleserviceimpl">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="reportdataservice" ref="reportdataservice"/>
+	</bean>
 
 </beans>

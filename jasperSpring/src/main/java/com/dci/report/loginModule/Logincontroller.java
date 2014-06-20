@@ -11,26 +11,25 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class Logincontroller {
-	
+
 	@Autowired
 	LoginService loginservice;
-	
+
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView loginPage(Model model) {
-		return new ModelAndView("login", "command", new User());
+
+		return new ModelAndView("loginpage", "command", new User());
 	}
-	
+
 	@RequestMapping(value = "/logining", method = RequestMethod.POST)
-	public String login(@ModelAttribute("SpringWeb")User user, ModelMap model) {
-		
-		System.out.println(user.getPassword());
+	public String login(@ModelAttribute("SpringWeb") User user, ModelMap model) {
+
 		String returnVal = loginservice.validate(user);
 		model.addAttribute("returnvalue", returnVal);
-		
-		if( returnVal.equals("welcome") ) {
-			return "successview";
-		}
-		else
-			return "home";
+
+		if (returnVal.equals("welcome")) {
+			return "redirect:homepage";
+		} else
+			return "redirect:login";
 	}
 }
