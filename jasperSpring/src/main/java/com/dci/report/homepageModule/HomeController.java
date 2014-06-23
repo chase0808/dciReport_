@@ -51,7 +51,7 @@ public class HomeController {
 	public String generate(Report report, ModelMap model) {
 		reportdataservice.create(report);
 		reporthandleservice.generatereport(report);
-		return "successview";
+		return "redirect:homepage";
 	}
 
 	@RequestMapping(value = "/regenerate", method = RequestMethod.POST)
