@@ -135,7 +135,9 @@ pageEncoding="ISO-8859-1"%>
       </div>
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <h1 class="page-header">Summary Reports</h1>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Generate New Report</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Generate New Report</button>  
+        
+        <a id="dLabel" href="www.google.com">Link 1</a>
         <h2 class="sub-header">Report History</h2>
         <div class="table-responsive">
           <table class="table table-striped">

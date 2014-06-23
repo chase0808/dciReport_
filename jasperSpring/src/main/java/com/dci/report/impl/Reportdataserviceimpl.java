@@ -57,7 +57,7 @@ public class Reportdataserviceimpl implements Reportdataservice {
 		jdbcTemplateObject.update(SQL, rid, 1, 1);
 		jdbcTemplateObject.update(SQL, rid, 2, report.getStartdate());
 		jdbcTemplateObject.update(SQL, rid, 3, report.getEnddate());
-		jdbcTemplateObject.update(SQL, rid, 4, report.getType());
+		jdbcTemplateObject.update(SQL, rid, 4, "summary");
 		ArrayList<Integer> para = report.getPara();
 		for (int i = 0; i < para.size(); i++) {
 			jdbcTemplateObject.update(SQL, rid, 5, para.get(i));
