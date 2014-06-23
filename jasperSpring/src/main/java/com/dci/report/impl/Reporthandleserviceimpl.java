@@ -1,9 +1,13 @@
 package com.dci.report.impl;
 
 import java.sql.Connection;
+import java.util.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import javax.sql.DataSource;
@@ -26,18 +30,37 @@ public class Reporthandleserviceimpl implements Reporthandleservice {
 		System.out.println(report.getId());
 		System.out.println(report.getStartdate());
 		System.out.println(report.getEnddate());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date startdate = null;
+		Date enddate = null;
+		try {
+			startdate = format.parse(report.getStartdate());
+			enddate = format.parse(report.getEnddate());
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		java.sql.Date sdate = new java.sql.Date(startdate.getTime());
+		System.out.println(sdate.toString());
+		java.sql.Date edate = new java.sql.Date(enddate.getTime());
 		ResultSet resultSet = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		Connection c = null;
 		String SQL = "select 'Number of Funds' AS title, count(*)AS rvalues, 'NUM_FUNDS' AS KEY From zdbxofi004.VtCLIENTcontent where fclientid = 22 and fcontent_name = 'VEHICLE' " +  
-		" UNION (select 'Number of Documents published', count(*), 'NUM_DOC_PUB' AS KEY From zdbxofi004.tbookinstance A INNER JOIN ZDBXOFI004.TBOOK B ON A.FBOOKID = B.FBOOKID where fbookinstance_status = 7 AND B.FCLIENTID = 22 and date( A.ftimelastchanged ) between '2014-05-01' and  '2014-05-31')" + 
-		" UNION (select 'Number of Documents approved', count(*), 'NUM_DOC_APPROV' AS KEY From zdbxofi004.tbookinstance A INNER JOIN ZDBXOFI004.TBOOK B ON A.FBOOKID = B.FBOOKID where fbookinstance_status = 2 AND B.FCLIENTID = 22 and date( A.ftimelastchanged ) between '2014-05-01' and  '2014-05-31')" +
+		" UNION (select 'Number of Documents published', count(*), 'NUM_DOC_PUB' AS KEY From zdbxofi004.tbookinstance A INNER JOIN ZDBXOFI004.TBOOK B ON A.FBOOKID = B.FBOOKID where fbookinstance_status = 7 AND B.FCLIENTID = 22 and date( A.ftimelastchanged ) between ? and  ?)" + 
+		" UNION (select 'Number of Documents approved', count(*), 'NUM_DOC_APPROV' AS KEY From zdbxofi004.tbookinstance A INNER JOIN ZDBXOFI004.TBOOK B ON A.FBOOKID = B.FBOOKID where fbookinstance_status = 2 AND B.FCLIENTID = 22 and date( A.ftimelastchanged ) between ? and  ?)" +
 		" UNION (select fbook_type, count(*), 'NUM_DOC_SYS' AS KEY  From zdbxofi004.tbookinstance a inner join zdbxofi004.tbook b on a.fbookid = b.fbookid  AND  B.FCLIENTID = 22 where  fbookinstance_status in (select fstatusid From zdbxofi004.tdocumentstatusidentity where fstatusid <> 5) group by fbook_type)" +
-		" UNION (select  'Number of Pages Rendered (Every Status)', coalesce(sum(fpagecount),0), 'PAGE_RENDERED' AS KEY  From zdbxofi004.tbookstatus2  A  INNER JOIN ZDBXOFI004.TBOOKINSTANCE B ON A.FBOOKINSTANCEID = B.FBOOKINSTANCEID where  date( A.ftimelastchanged ) between '2014-05-01' and  '2014-05-31' AND FBOOKSTATUS = 2)";
+		" UNION (select  'Number of Pages Rendered (Every Status)', coalesce(sum(fpagecount),0), 'PAGE_RENDERED' AS KEY  From zdbxofi004.tbookstatus2  A  INNER JOIN ZDBXOFI004.TBOOKINSTANCE B ON A.FBOOKINSTANCEID = B.FBOOKINSTANCEID where  date( A.ftimelastchanged ) between ? and ? AND FBOOKSTATUS = 2)";
 		try {
 			c = dataSource.getConnection();
-			stmt = c.createStatement();
-			resultSet = stmt.executeQuery(SQL);			
+			stmt = c.prepareStatement(SQL);
+			stmt.setDate(1, (java.sql.Date) sdate);
+			stmt.setDate(2, (java.sql.Date) edate);
+			stmt.setDate(3, (java.sql.Date) sdate);
+			stmt.setDate(4, (java.sql.Date) edate);
+			stmt.setDate(5, (java.sql.Date) sdate);
+			stmt.setDate(6, (java.sql.Date) edate);
+			resultSet = stmt.executeQuery();			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
