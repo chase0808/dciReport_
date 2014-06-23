@@ -5,6 +5,15 @@ public class Summaryinput {
 	private String library;
 	private String start_date;
 	private String end_date;
+	private int departmentID;
+
+	public int getDepartmentID() {
+		return departmentID;
+	}
+
+	public void setDepartmentID(int departmentID) {
+		this.departmentID = departmentID;
+	}
 
 	public String getStart_date() {
 		return start_date;
