@@ -18,6 +18,7 @@ public class ReportExtractor implements ResultSetExtractor {
 			DataAccessException {
 		Map<Integer, Report> map = new HashMap<Integer,Report>();
 		Report report = null;
+		
 		ArrayList<Integer> para = null;
 		while(rs.next()) {
 			Integer id = rs.getInt("id");

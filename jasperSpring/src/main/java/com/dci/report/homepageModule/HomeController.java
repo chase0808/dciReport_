@@ -41,9 +41,9 @@ public class HomeController {
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public ModelAndView test(Model model) {
-		Report report = reportdataservice.getReport(4);
-		reporthandleservice.generatereport(report);
-		return new ModelAndView("test", "command", report);
+		//Report report = reportdataservice.getReport(4);
+		//reporthandleservice.generatereport(report);
+		return new ModelAndView("test", "command", new Report());
 
 	}
 
@@ -51,7 +51,7 @@ public class HomeController {
 	public String generate(Report report, ModelMap model) {
 		reportdataservice.create(report);
 		reporthandleservice.generatereport(report);
-		return "successview";
+		return "redirect:homepage";
 	}
 
 	@RequestMapping(value = "/regenerate", method = RequestMethod.POST)
