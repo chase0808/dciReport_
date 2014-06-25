@@ -9,6 +9,7 @@ public class Report {
 	private String type;
 	private String startdate;
 	private String enddate;
+
 	private ArrayList<Integer> para = new ArrayList<Integer>();
 
 	public Report() {
