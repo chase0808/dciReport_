@@ -163,7 +163,7 @@ pageEncoding="ISO-8859-1"%>
                   <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Regenerate</button>
                 </td>
                 <td>
-                  <a  href="file:///C:/Users/xqi/eclipesworkspace/jasperSpring/summary.pdf">Review</a>
+                  <a  href="file:///C:/Users/ldong/workspace/jasperSpring/summary.pdf">Review</a>
                 </td>
                 <td>
                   <button type="button" class="btn btn-danger btn-sm">Delete</button>

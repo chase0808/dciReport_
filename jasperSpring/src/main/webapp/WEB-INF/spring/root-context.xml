@@ -57,7 +57,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/jasperspring" />
 		<property name="username" value="root" />
-		<property name="password" value="qixin808" />
+		<property name="password" value="root" />
 	</bean>
 
 	<bean id="reporthandleservice" class="com.dci.report.impl.Reporthandleserviceimpl">

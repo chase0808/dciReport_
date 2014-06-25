@@ -6,8 +6,8 @@ public class Report {
 
 	private int id;
 	private int userid;
-	private String type;
 	private String startdate;
+	private String type;
 	private String enddate;
 
 	private ArrayList<Integer> para = new ArrayList<Integer>();
@@ -25,22 +25,6 @@ public class Report {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getUserid() {
-		return userid;
-	}
-
-	public void setUserid(int userid) {
-		this.userid = userid;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public String getStartdate() {
@@ -66,5 +50,23 @@ public class Report {
 	public void setPara(ArrayList<Integer> para) {
 		this.para = para;
 	}
+
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
 
 }
