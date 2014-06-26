@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.dci.report.bean.Client;
 import com.dci.report.bean.Report;
+import com.dci.report.bean.Reportpara;
+import com.dci.report.bean.Transaction;
 import com.dci.report.jdbc.DepartmentExtractor;
 import com.dci.report.services.Reportdataservice;
 
@@ -41,26 +43,38 @@ public class Reportdataserviceimpl implements Reportdataservice {
 	}
 
 	@Override
-	public void create(Report report) {
+	public void create(Transaction transaction) {
 
-		String SQL = "insert into report(id) value (null)";
+		String SQL = "insert into jasreport.ttransaction (userid, reportid) values (?, ?)";
 
-		jdbcTemplateObject.update(SQL);
+		jdbcTemplateObject.update(SQL, transaction.getUserid(), transaction.getReportid());
 
-		SQL = "select max(id) from report";
+		SQL = "select max(id) from jasreport.ttransaction";
 
 		@SuppressWarnings("deprecation")
-		int rid = jdbcTemplateObject.queryForInt(SQL);
+		int tid = jdbcTemplateObject.queryForInt(SQL);
 
-		SQL = "insert into para(reportid, paraid, paravalue) values (?, ?, ?)";
-
-		jdbcTemplateObject.update(SQL, rid, 1, 1);
-		jdbcTemplateObject.update(SQL, rid, 2, report.getStartdate());
-		jdbcTemplateObject.update(SQL, rid, 3, report.getEnddate());
-		jdbcTemplateObject.update(SQL, rid, 4, "summary");
-		ArrayList<Integer> para = report.getPara();
-		for (int i = 0; i < para.size(); i++) {
-			jdbcTemplateObject.update(SQL, rid, 5, para.get(i));
+		SQL = "insert into jasreport.ttransactionpara(transactionid, paraid, paravalue) values (?, ?, ?)";
+		
+		Reportpara rpara = null;
+		for( int i = 0; i < transaction.getPara().size(); i++ ) {
+			rpara = transaction.getPara().get(i);
+			for( int j = 0; j < rpara.getValue().size(); j++ ) {
+				jdbcTemplateObject.update(SQL, tid, rpara.getId(), rpara.getValue().get(j));
+			}
+		}
+		
+		SQL = "insert into jasreport.ttransactionoutput(transactionid, outputid, status, filename) values (?, ?, ?, ?)";
+		for( int i = 0; i < transaction.getOutput().size(); i++ ) {
+			java.util.Date date= new java.util.Date();
+			int outputid = transaction.getOutput().get(i);
+			String query = "select type from jasreport.toutput where id = ?";
+			String type = jdbcTemplateObject.queryForObject(query, String.class, outputid);
+			query = "select name from jasreport.treport where id = ?";
+			String rname = jdbcTemplateObject.queryForObject(query, String.class, transaction.getReportid());
+			String fname = Integer.toString(transaction.getUserid()) + rname + date.toString() + type;
+			String status = "In progress";
+			jdbcTemplateObject.update(SQL, tid, outputid, status, fname);
 		}
 	}
 

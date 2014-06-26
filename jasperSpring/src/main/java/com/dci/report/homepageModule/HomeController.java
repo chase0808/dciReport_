@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dci.report.bean.Client;
 import com.dci.report.bean.Report;
+import com.dci.report.bean.Reportpara;
+import com.dci.report.bean.Transaction;
 import com.dci.report.services.Reportdataservice;
 import com.dci.report.services.Reporthandleservice;
 
@@ -41,15 +43,39 @@ public class HomeController {
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public ModelAndView test(Model model) {
-		//Report report = reportdataservice.getReport(4);
-		//reporthandleservice.generatereport(report);
+		Transaction test = new Transaction();
+		test.setUserid(2);
+		test.setReportid(1);
+		ArrayList<Reportpara> arrpara = new ArrayList<Reportpara>();
+		for( int i = 0; i < 3; i++ ) {
+			Reportpara temp = new Reportpara();
+			temp.setId(i);
+			ArrayList<String> temp1 = new ArrayList<String>();
+			temp1.add("Leo");
+			temp.setValue(temp1);
+			arrpara.add(temp);
+		}
+		Reportpara temp = new Reportpara();
+		temp.setId(4);
+		ArrayList<String> temp1 = new ArrayList<String>();
+		temp1.add("Leo");
+		temp1.add("Bi");
+		temp.setValue(temp1);
+		arrpara.add(temp);
+		test.setPara(arrpara);
+		ArrayList<Integer> temp2 = new ArrayList<Integer>();
+		temp2.add(1);
+		temp2.add(2);
+		test.setOutput(temp2);
+		reportdataservice.create(test);
+		System.out.println("Successful!");
 		return new ModelAndView("test", "command", new Report());
 
 	}
 
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public String generate(Report report, ModelMap model) {
-		reportdataservice.create(report);
+		//reportdataservice.create(report);
 		reporthandleservice.generatereport(report);
 		return "redirect:homepage";
 	}

@@ -1,12 +1,42 @@
 package com.dci.report.bean;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class Transaction {
 	private int id;
 	private int userid;
+	private int reportid;
 	private Timestamp date;
-	//private ArrayList<Reportpara> para;
+	private Reportpara reportpara = new Reportpara();
+	private ArrayList<Reportpara> para = new ArrayList<Reportpara>();
+	private ArrayList<Integer> output = new ArrayList<Integer>();
+	
+	public ArrayList<Integer> getOutput() {
+		return output;
+	}
+	public void setOutput(ArrayList<Integer> output) {
+		this.output = output;
+	}
+	public int getReportid() {
+		return reportid;
+	}
+	public void setReportid(int reportid) {
+		this.reportid = reportid;
+	}
+
+	public Reportpara getReportpara() {
+		return reportpara;
+	}
+	public void setReportpara(Reportpara reportpara) {
+		this.reportpara = reportpara;
+	}
+	public ArrayList<Reportpara> getPara() {
+		return para;
+	}
+	public void setPara(ArrayList<Reportpara> para) {
+		this.para = para;
+	}
 	public int getId() {
 		return id;
 	}
