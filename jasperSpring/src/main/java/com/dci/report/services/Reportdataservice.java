@@ -6,12 +6,13 @@ import javax.sql.DataSource;
 
 import com.dci.report.bean.Client;
 import com.dci.report.bean.Report;
+import com.dci.report.bean.Transaction;
 
 public interface Reportdataservice {
 
 	public void setReportdatasource(DataSource dataSource);
 
-	public void create(Report report);
+	public void create(Transaction transaction);
 
 	public Report getReport(Integer reportid);
 
