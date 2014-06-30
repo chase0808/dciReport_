@@ -8,10 +8,23 @@ public class Transaction {
 	private int userid;
 	private int reportid;
 	private Timestamp date;
+	private String genMethod;
 	private Reportpara reportpara = new Reportpara();
 	private ArrayList<Reportpara> para = new ArrayList<Reportpara>();
 	private ArrayList<Integer> output = new ArrayList<Integer>();
+	private ArrayList<Reportoutput> arroutput = new ArrayList<Reportoutput>();
 	
+	public Transaction(){};
+	
+	public Transaction(int id){
+		this.id = id;
+	}
+	public ArrayList<Reportoutput> getArroutput() {
+		return arroutput;
+	}
+	public void setArroutput(ArrayList<Reportoutput> arroutput) {
+		this.arroutput = arroutput;
+	}
 	public ArrayList<Integer> getOutput() {
 		return output;
 	}
@@ -55,6 +68,13 @@ public class Transaction {
 	public void setDate(Timestamp date) {
 		this.date = date;
 	}
+	
+	public String getGenMethod() {
+		return genMethod;
+	}
 
+	public void setGenMethod(String genMethod) {
+		this.genMethod = genMethod;
+	}
 	
 }

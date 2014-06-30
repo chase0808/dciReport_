@@ -16,9 +16,9 @@ public interface Reportdataservice {
 
 	public void create(Transaction transaction);
 
-	public Report getReport(Integer reportid);
+	public Transaction getTransaction(Integer transactionid);
 
-	public List<Report> listReport();
+	public List<Transaction> listTransaction();
 
 	public void delete(Integer id);
 

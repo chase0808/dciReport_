@@ -59,6 +59,7 @@ public class Reporthandleserviceimpl implements Reporthandleservice {
 		Connection c = null;
 
 		String SQL = "CALL ZDBXUTIL01.SPR1_GETSUMMARYREPORT(?,?,?,?)";
+<<<<<<< HEAD
 		/*
 		 * String SQL =
 		 * "select 'Number of Funds' AS title, count(*)AS rvalues, 'NUM_FUNDS' AS KEY From zdbxofi004.VtCLIENTcontent where fclientid = 22 and fcontent_name = 'VEHICLE' "
@@ -82,6 +83,8 @@ public class Reporthandleserviceimpl implements Reporthandleservice {
 		 * " UNION (select  'Number of Pages Rendered (Every Status)', coalesce(sum(fpagecount),0), 'PAGE_RENDERED' AS KEY  From zdbxofi004.tbookstatus2  A  INNER JOIN ZDBXOFI004.TBOOKINSTANCE B ON A.FBOOKINSTANCEID = B.FBOOKINSTANCEID where  date( A.ftimelastchanged ) between ? and ? AND FBOOKSTATUS = 2)"
 		 * ;
 		 */
+=======
+>>>>>>> 21c94ea0a63b054e23d8725c7079e846c2478096
 		try {
 
 			String idString = ",";

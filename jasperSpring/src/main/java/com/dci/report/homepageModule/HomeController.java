@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.dci.report.bean.Client;
 import com.dci.report.bean.Department;
@@ -25,6 +26,7 @@ import com.dci.report.services.Reportdataservice;
 import com.dci.report.services.Reporthandleservice;
 
 @Controller
+@SessionAttributes(value={"transaction"})
 public class HomeController {
 
 	@Autowired
@@ -35,13 +37,12 @@ public class HomeController {
 
 	@RequestMapping(value = "/homepage", method = RequestMethod.GET)
 	public ModelAndView homepage(Model model) {
-		ArrayList<Report> listreport = (ArrayList<Report>) reportdataservice
-				.listReport();
+		//ArrayList<Report> listreport = (ArrayList<Report>) reportdataservice.listReport();
 		List<Client> clientList = (reporthandleservice.getClientMap());
 
 		ModelAndView modelandview = new ModelAndView("dashboard", "command",
 				new Report());
-		modelandview.addObject("listreport", listreport);
+		//modelandview.addObject("listreport", listreport);
 		modelandview.addObject("clientlist", clientList);
 		return modelandview;
 	}
@@ -151,6 +152,7 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
+<<<<<<< HEAD
 	public ModelAndView test(Model model) {
 
 		Transaction test = new Transaction();
@@ -181,23 +183,66 @@ public class HomeController {
 		System.out.println("Successful!");
 
 		return new ModelAndView("test", "command", new Report());
+=======
+	public String test(Model model) {
+//		Transaction test = new Transaction();
+//		test.setUserid(2);
+//		test.setReportid(1);
+//		ArrayList<Reportpara> arrpara = new ArrayList<Reportpara>();
+//		for( int i = 0; i < 3; i++ ) {
+//			Reportpara temp = new Reportpara();
+//			temp.setId(i);
+//			ArrayList<String> temp1 = new ArrayList<String>();
+//			temp1.add("Leo");
+//			temp.setValue(temp1);
+//			arrpara.add(temp);
+//		}
+//		Reportpara temp = new Reportpara();
+//		temp.setId(4);
+//		ArrayList<String> temp1 = new ArrayList<String>();
+//		temp1.add("Leo");
+//		temp1.add("Bi");
+//		temp.setValue(temp1);
+//		arrpara.add(temp);
+//		test.setPara(arrpara);
+//		ArrayList<Integer> temp2 = new ArrayList<Integer>();
+//		temp2.add(1);
+//		temp2.add(2);
+//		test.setOutput(temp2);
+//		reportdataservice.create(test);
+		
+		ArrayList<Transaction> t = (ArrayList<Transaction>) reportdataservice.listTransaction();
+		System.out.println("Successful!");
+		System.out.println(t.get(0).getDate().toString());
+		System.out.println(t.get(0).getId());
+		System.out.println(t.get(0).getPara().get(2).getValue().get(0));
+		System.out.println(t.get(0).getPara().get(2).getValue().get(1));
+		System.out.println(t.get(0).getArroutput().get(0).getFilename());
+//		reportdataservice.delete(10);
+//		System.out.println("Successful");
+		model.addAttribute("transaction", t.get(0));
+		return "redirect:genbillingsummary";
+>>>>>>> 21c94ea0a63b054e23d8725c7079e846c2478096
 
 	}
 
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
+<<<<<<< HEAD
 	public String generate(Report report, ModelMap model) {
 
 		reporthandleservice.generatereport(report);
 		System.out.println("After");
 		return "redirect:homepage";
+=======
+	public String generate(Transaction transaction, ModelMap model) {
+		reportdataservice.create(transaction);
+		String genMethod = transaction.getGenMethod();
+		model.addAttribute("transaction", transaction);
+		String output = "redirect:" + genMethod;
+		return output;
+>>>>>>> 21c94ea0a63b054e23d8725c7079e846c2478096
 	}
 
-	@RequestMapping(value = "/regenerate", method = RequestMethod.POST)
-	public String regenerate(Report report, ModelMap model) {
-		System.out.println("I am in the regenerate!");
-		// reporthandleservice.generatereport(report);
-		return "successview";
-	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String delete(Report report, ModelMap model) {
