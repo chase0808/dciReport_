@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.dci.report.bean.Client;
 import com.dci.report.bean.Report;
+import com.dci.report.bean.Reportoutput;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
 import com.dci.report.jdbc.DepartmentExtractor;
@@ -78,25 +79,44 @@ public class Reportdataserviceimpl implements Reportdataservice {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Report getReport(Integer reportid) {
-		String SQL = "select * from report a inner join para b on a.id = b.reportid inner join lookup c on b.paraid = c.paraid where a.id = ?";
-		ArrayList<Report> reports = jdbcTemplateObject.query(SQL,
-				new ReportExtractor(), reportid);
-		return reports.get(0);
+	public Transaction getTransaction(Integer transactionid) {
+		String SQL = 
+				"select a.id, description, userid, a.date, reportid, paraid, paravalue, paratype from jasreport.ttransaction a inner join jasreport.ttransactionpara b on a.id = b.transactionid inner join jasreport.treportpara c on b.paraid = c.id inner join jasreport.treport e on a.reportid = e.id where a.id = ?";
+		ArrayList<Transaction> transactions = jdbcTemplateObject.query(SQL,
+				new TransactionParaExtractor(), transactionid);
+		SQL = "select * from jasreport.ttransactionoutput where transactionid = ?";
+		ArrayList<Reportoutput> reportoutput = (ArrayList<Reportoutput>) jdbcTemplateObject.query(SQL, new TransactionOpMapper(), transactionid);
+		transactions.get(0).setArroutput(reportoutput);
+		return transactions.get(0);
 	}
+	
 
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<Report> listReport() {
-		String SQL = "select * from report a inner join para b on a.id = b.reportid inner join lookup c on b.paraid = c.paraid";
-		ArrayList<Report> reports = jdbcTemplateObject.query(SQL,
-				new ReportExtractor());
-		return reports;
+	public List<Transaction> listTransaction() {
+		String SQL = 
+				"select a.id, description, userid, a.date, reportid, paraid, paravalue, paratype from jasreport.ttransaction a inner join jasreport.ttransactionpara b on a.id = b.transactionid inner join jasreport.treportpara c on b.paraid = c.id inner join jasreport.treport e on a.reportid = e.id";
+		ArrayList<Transaction> transactions = jdbcTemplateObject.query(SQL,
+				new TransactionParaExtractor());
+		SQL = "select * from jasreport.ttransactionoutput where transactionid = ?";
+		for( int i = 0; i < transactions.size(); i++ ) {
+			int tid = transactions.get(i).getId();
+			ArrayList<Reportoutput> reportoutput = (ArrayList<Reportoutput>) jdbcTemplateObject.query(SQL, new TransactionOpMapper(), tid);
+			transactions.get(i).setArroutput(reportoutput);
+		}
+		return transactions;
 	}
 
 	@Override
 	public void delete(Integer id) {
-		String SQL = "delete report, para from report inner join para on id = reportid where id = ?";
+		String SQL = "delete from jasreport.ttransaction where id = ?";
+		jdbcTemplateObject.update(SQL, id);
+		SQL = "delete from jasreport.ttransactionpara where transactionid = ?";
+		jdbcTemplateObject.update(SQL, id);
+		SQL = "delete from jasreport.ttransactionoutput where transactionid = ?";
 		jdbcTemplateObject.update(SQL, id);
 	}
 
@@ -108,5 +128,7 @@ public class Reportdataserviceimpl implements Reportdataservice {
 				new DepartmentExtractor());
 		return listofclient;
 	}
+
+
 
 }
