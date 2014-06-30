@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.dci.report.bean.Client;
-import com.dci.report.bean.Report;
 import com.dci.report.bean.Reportoutput;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
@@ -89,29 +88,27 @@ public class Reportdataserviceimpl implements Reportdataservice {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Transaction getTransaction(Integer transactionid) {
-		String SQL = 
-				"select a.id, description, userid, a.date, reportid, paraid, paravalue, paratype from jasreport.ttransaction a inner join jasreport.ttransactionpara b on a.id = b.transactionid inner join jasreport.treportpara c on b.paraid = c.id inner join jasreport.treport e on a.reportid = e.id where a.id = ?";
+		String SQL = "select a.id, description, userid, a.date, reportid, paraid, paravalue, paratype from jasreport.ttransaction a inner join jasreport.ttransactionpara b on a.id = b.transactionid inner join jasreport.treportpara c on b.paraid = c.id inner join jasreport.treport e on a.reportid = e.id where a.id = ?";
 		ArrayList<Transaction> transactions = jdbcTemplateObject.query(SQL,
 				new TransactionParaExtractor(), transactionid);
 		SQL = "select * from jasreport.ttransactionoutput where transactionid = ?";
-		ArrayList<Reportoutput> reportoutput = (ArrayList<Reportoutput>) jdbcTemplateObject.query(SQL, new TransactionOpMapper(), transactionid);
+		ArrayList<Reportoutput> reportoutput = (ArrayList<Reportoutput>) jdbcTemplateObject
+				.query(SQL, new TransactionOpMapper(), transactionid);
 		transactions.get(0).setArroutput(reportoutput);
 		return transactions.get(0);
 	}
-	
-
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Transaction> listTransaction() {
-		String SQL = 
-				"select a.id, description, userid, a.date, reportid, paraid, paravalue, paratype from jasreport.ttransaction a inner join jasreport.ttransactionpara b on a.id = b.transactionid inner join jasreport.treportpara c on b.paraid = c.id inner join jasreport.treport e on a.reportid = e.id";
+		String SQL = "select a.id, description, userid, a.date, reportid, paraid, paravalue, paratype from jasreport.ttransaction a inner join jasreport.ttransactionpara b on a.id = b.transactionid inner join jasreport.treportpara c on b.paraid = c.id inner join jasreport.treport e on a.reportid = e.id";
 		ArrayList<Transaction> transactions = jdbcTemplateObject.query(SQL,
 				new TransactionParaExtractor());
 		SQL = "select * from jasreport.ttransactionoutput where transactionid = ?";
-		for( int i = 0; i < transactions.size(); i++ ) {
+		for (int i = 0; i < transactions.size(); i++) {
 			int tid = transactions.get(i).getId();
-			ArrayList<Reportoutput> reportoutput = (ArrayList<Reportoutput>) jdbcTemplateObject.query(SQL, new TransactionOpMapper(), tid);
+			ArrayList<Reportoutput> reportoutput = (ArrayList<Reportoutput>) jdbcTemplateObject
+					.query(SQL, new TransactionOpMapper(), tid);
 			transactions.get(i).setArroutput(reportoutput);
 		}
 		return transactions;
@@ -136,7 +133,6 @@ public class Reportdataserviceimpl implements Reportdataservice {
 		return listofclient;
 	}
 
-<<<<<<< HEAD
 	@Override
 	public List<String> listReportType() {
 		// TODO Auto-generated method stub
@@ -154,8 +150,5 @@ public class Reportdataserviceimpl implements Reportdataservice {
 				new ReportParaExtractor());
 		return reportToPara;
 	}
-=======
 
-
->>>>>>> 21c94ea0a63b054e23d8725c7079e846c2478096
 }
