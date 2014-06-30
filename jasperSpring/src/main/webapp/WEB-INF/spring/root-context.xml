@@ -52,18 +52,11 @@
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 	
-<<<<<<< HEAD
-	<bean id="reportdatasource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/jasperspring" />
-		<property name="username" value="root" />
-=======
+
 	<bean id="reportdatasource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.ibm.as400.access.AS400JDBCDriver" />
 		<property name="url" value="jdbc:as400://zeus/jasreport;" />
 		<property name="username" value="DCIINTERN" />
->>>>>>> 28fdf2d1f079fdffaee881d41d8f65a4136e1ffa
 		<property name="password" value="qixin808" />
 	</bean>
 

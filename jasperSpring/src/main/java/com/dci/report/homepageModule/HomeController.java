@@ -1,7 +1,9 @@
 package com.dci.report.homepageModule;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,9 +12,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dci.report.bean.Client;
+import com.dci.report.bean.Department;
+import com.dci.report.bean.FormLayout;
 import com.dci.report.bean.Report;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
@@ -41,17 +46,118 @@ public class HomeController {
 		return modelandview;
 	}
 
+	@RequestMapping(value = "/uitest", method = RequestMethod.GET)
+	public ModelAndView initFormLayout(Model model) {
+		List<Client> clientList = (reporthandleservice.getClientMap());
+		ModelAndView modelandview = new ModelAndView("dashboard", "command",
+				new Report());
+		List<String> reportTypeList = reportdataservice.listReportType();
+		Map<String, List<Reportpara>> reportToPara = reportdataservice
+				.reportParaMap();
+		Iterator<String> KeySetIterator = reportToPara.keySet().iterator();
+		while (KeySetIterator.hasNext()) {
+			String reportname = KeySetIterator.next();
+			modelandview.addObject(reportname, reportToPara.get(reportname));
+		}
+		String html = " <label for=\"start_date\">Start Date</label>"
+				+ " <input id=\"start_date\" name=\"startdate\" class=\"form-control\" type=\"date\" value=\"\"/>";
+		FormLayout formlayout = new FormLayout();
+		formlayout.setLayoutHtml(html);
+		modelandview.addObject("formlayout", formlayout);
+		modelandview.addObject("reportTypeList", reportTypeList);
+		modelandview.addObject("clientlist", clientList);
+
+		return modelandview;
+	}
+
+	@RequestMapping(value = "/uitest2", method = RequestMethod.GET)
+	public ModelAndView homepageWithPopup(
+			@RequestParam("reportTypeName") String reportTypename, Model model) {
+		List<Client> clientList = (reporthandleservice.getClientMap());
+		ModelAndView modelandview = new ModelAndView("dashboard_generate",
+				"command", new Report());
+		List<String> reportTypeList = reportdataservice.listReportType();
+		Map<String, List<Reportpara>> reportToPara = reportdataservice
+				.reportParaMap();
+		String html = "";
+		List<Reportpara> reportpara = reportToPara.get(reportTypename);
+		for (Reportpara para : reportpara) {
+			int paraID = para.getId();
+			switch (paraID) {
+			case 1:
+				html += " <label for=\"start_date\">Start Date</label>"
+						+ " <input id=\"start_date\" name=\"startdate\" class=\"form-control\" type=\"date\" value=\"\"/>";
+				break;
+			case 2:
+				html += " <label for=\"end_date\">End Date</label>"
+						+ " <input id=\"end_date\" name=\"enddate\" class=\"form-control\" type=\"date\" value=\"\"/>";
+				break;
+
+			case 3:
+				html += "<div class=\"container\">"
+						+ "<div class=\"row\">"
+						+ "<div class=\"col-md-3 panel1\">"
+						+ "  <div class=\"panel panel-default panel-primary \">"
+						+ "    <div class=\"panel-heading\">Select Client</div>"
+						+ "<div class=\"panel-body checkboxes\">"
+						+ " <ul class=\"mktree\" id=\"tree1\">";
+				int count = 1;
+				for (Client client : clientList) {
+					html += "<li>" + client.getClientname();
+					for (Department department : client.getDepartments()) {
+						html += "<ul>"
+								+ "<li>"
+								+ "<label>"
+								+ department.getDepartmentName()
+								+ "<input id=\"para"
+								+ count
+								+ "\""
+								+ " name=\"para\" type=\"checkbox\" value=\""
+								+ department.getDepartmentID()
+								+ "\"/><input type=\"hidden\" name=\"_para\" value=\"on\"/>"
+								+ "</label>" + "</li>" + "</ul>";
+						count++;
+					}
+					html += "</li>";
+				}
+				break;
+			}
+		}
+		FormLayout formlayout = new FormLayout();
+		formlayout.setLayoutHtml(html);
+		modelandview.addObject("formlayout", formlayout);
+		modelandview.addObject("reportTypeList", reportTypeList);
+
+		return modelandview;
+	}
+
+	// @RequestMapping(value = "/uitest", method = RequestMethod.GET)
+	// @ResponseBody
+	// public Object getParmeter(String ReportId) {
+	//
+	// // query from database
+	// // or List object
+	//
+	// List parameter = new ArrayList();
+	// parameter.add("Date");
+	//
+	// return parameter;
+	// }
+	@RequestMapping(value = "/result", method = RequestMethod.POST)
+	public ModelAndView showTestResult(Report report, Model model) {
+		ModelAndView modelandview = new ModelAndView("result");
+		modelandview.addObject("report", report);
+		return modelandview;
+	}
+
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public ModelAndView test(Model model) {
-<<<<<<< HEAD
-		// Report report = reportdataservice.getReport(4);
-		// reporthandleservice.generatereport(report);
-=======
+
 		Transaction test = new Transaction();
 		test.setUserid(2);
 		test.setReportid(1);
 		ArrayList<Reportpara> arrpara = new ArrayList<Reportpara>();
-		for( int i = 0; i < 3; i++ ) {
+		for (int i = 0; i < 3; i++) {
 			Reportpara temp = new Reportpara();
 			temp.setId(i);
 			ArrayList<String> temp1 = new ArrayList<String>();
@@ -73,19 +179,14 @@ public class HomeController {
 		test.setOutput(temp2);
 		reportdataservice.create(test);
 		System.out.println("Successful!");
->>>>>>> 28fdf2d1f079fdffaee881d41d8f65a4136e1ffa
+
 		return new ModelAndView("test", "command", new Report());
 
 	}
 
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public String generate(Report report, ModelMap model) {
-<<<<<<< HEAD
-		// reportdataservice.create(report);
-		System.out.println("Before");
-=======
-		//reportdataservice.create(report);
->>>>>>> 28fdf2d1f079fdffaee881d41d8f65a4136e1ffa
+
 		reporthandleservice.generatereport(report);
 		System.out.println("After");
 		return "redirect:homepage";

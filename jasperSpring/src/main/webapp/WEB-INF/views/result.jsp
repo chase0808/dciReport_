@@ -10,11 +10,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-<c:forEach var="departmentID" items="${report.para}">  
-    ${departmentID}<br>  
-</c:forEach>  
-<br>
+
 <p>${report.startdate}</p>
 <p>${report.enddate}</p>
-</body>
+<p>${report.para}</p>
+
 </html>

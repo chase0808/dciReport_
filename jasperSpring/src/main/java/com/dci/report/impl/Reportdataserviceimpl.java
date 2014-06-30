@@ -1,7 +1,9 @@
 package com.dci.report.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -47,7 +49,8 @@ public class Reportdataserviceimpl implements Reportdataservice {
 
 		String SQL = "insert into jasreport.ttransaction (userid, reportid) values (?, ?)";
 
-		jdbcTemplateObject.update(SQL, transaction.getUserid(), transaction.getReportid());
+		jdbcTemplateObject.update(SQL, transaction.getUserid(),
+				transaction.getReportid());
 
 		SQL = "select max(id) from jasreport.ttransaction";
 
@@ -55,24 +58,28 @@ public class Reportdataserviceimpl implements Reportdataservice {
 		int tid = jdbcTemplateObject.queryForInt(SQL);
 
 		SQL = "insert into jasreport.ttransactionpara(transactionid, paraid, paravalue) values (?, ?, ?)";
-		
+
 		Reportpara rpara = null;
-		for( int i = 0; i < transaction.getPara().size(); i++ ) {
+		for (int i = 0; i < transaction.getPara().size(); i++) {
 			rpara = transaction.getPara().get(i);
-			for( int j = 0; j < rpara.getValue().size(); j++ ) {
-				jdbcTemplateObject.update(SQL, tid, rpara.getId(), rpara.getValue().get(j));
+			for (int j = 0; j < rpara.getValue().size(); j++) {
+				jdbcTemplateObject.update(SQL, tid, rpara.getId(), rpara
+						.getValue().get(j));
 			}
 		}
-		
+
 		SQL = "insert into jasreport.ttransactionoutput(transactionid, outputid, status, filename) values (?, ?, ?, ?)";
-		for( int i = 0; i < transaction.getOutput().size(); i++ ) {
-			java.util.Date date= new java.util.Date();
+		for (int i = 0; i < transaction.getOutput().size(); i++) {
+			java.util.Date date = new java.util.Date();
 			int outputid = transaction.getOutput().get(i);
 			String query = "select type from jasreport.toutput where id = ?";
-			String type = jdbcTemplateObject.queryForObject(query, String.class, outputid);
+			String type = jdbcTemplateObject.queryForObject(query,
+					String.class, outputid);
 			query = "select name from jasreport.treport where id = ?";
-			String rname = jdbcTemplateObject.queryForObject(query, String.class, transaction.getReportid());
-			String fname = Integer.toString(transaction.getUserid()) + rname + date.toString() + type;
+			String rname = jdbcTemplateObject.queryForObject(query,
+					String.class, transaction.getReportid());
+			String fname = Integer.toString(transaction.getUserid()) + rname
+					+ date.toString() + type;
 			String status = "In progress";
 			jdbcTemplateObject.update(SQL, tid, outputid, status, fname);
 		}
@@ -109,4 +116,21 @@ public class Reportdataserviceimpl implements Reportdataservice {
 		return listofclient;
 	}
 
+	@Override
+	public List<String> listReportType() {
+		// TODO Auto-generated method stub
+		String sql = "select name From  jasreport.treport";
+		List<String> listofReportType = new JdbcTemplate(reportdatasource)
+				.queryForList(sql, String.class);
+		return listofReportType;
+	}
+
+	@Override
+	public Map<String, List<Reportpara>> reportParaMap() {
+		Map<String, List<Reportpara>> reportToPara = new HashMap<String, List<Reportpara>>();
+		String sql = "select a.id as reportid, a.name as reportname, type as paraname, paraid, paratype  From jasreport.treport a inner join jasreport.treporttopara b on a.id = b.reportid inner join jasreport.treportpara c on b.paraid = c.id order by reportid ";
+		reportToPara = new JdbcTemplate(reportdatasource).query(sql,
+				new ReportParaExtractor());
+		return reportToPara;
+	}
 }
