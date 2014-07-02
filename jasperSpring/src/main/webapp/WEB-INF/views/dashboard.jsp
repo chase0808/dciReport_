@@ -3,7 +3,7 @@ pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -40,8 +40,9 @@ pageEncoding="ISO-8859-1"%>
     });
     $("input[type='checkbox']").change(function(){
     var value = $(this).val();
+    var deptname = $(this).parent("label").text();
     if(this.checked){
-    var txt1 = "<p class = " + value +">" + value + "</p>";
+    var txt1 = "<p class = " + value +">" + dept + "</p>";
     $("#selectedClient").append(txt1);
     } else {
     $("p").remove("." + value);
@@ -56,88 +57,7 @@ pageEncoding="ISO-8859-1"%>
   </head>
   <body>
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Criteria</h4>
-          </div>
-          <div class="modal-body ">
-            <form:form role="form" method="POST" commandname="departments" action="/report/result" >
-              <div class="form-group">
-              
-             <form:label for="start_date" path="startdate">Start Date</form:label>
-              <form:input type="date" class="form-control" id="start_date" path="startdate"/>
-              
-              <form:label for="end_date" path="enddate">End Date</form:label>
-              <form:input type="date" class="form-control" id="end_date" path="enddate"/>
-                
-                
-                <div class="container">
-                  <div class="row">
-                    <div class="col-md-3 panel1">
-                      <div class="panel panel-default panel-primary ">
-                        <div class="panel-heading">Select Client</div>
-                        <div class="panel-body checkboxes">
-                          <ul class="mktree" id="tree1">
-                            <c:forEach var="client"  items="${clientlist}" >
-                            <li>${client.clientname}
-                              <c:forEach var="department" items="${client.departments}">
-                              <ul>
-                                <li>
-                                  
-                                  <label>
-                                    ${department.departmentName}
-                                   <form:checkbox path="para" value= " ${department.departmentID}"></form:checkbox>
-                                   
-                                  
-                                  
-                                </label>
-                                
-                              </li>
-                            </ul>
-                            </c:forEach>
-                          </li>
-                          </c:forEach>
-
-                          </ul>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="col-md-3 panel2">
-                    <div class="panel panel-default panel-primary">
-                      <div class="panel-heading">Selected Client</div>
-                      <div class="panel-body"  id="selectedClient" >
-                        
-                      </div>
-                    </div>
-                  </div>
-                  
-                </div>
-              </div>
-              
-              
-            </div>
-            
-            
-            
-            
-            
-            
-            
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"> <script>document.write(reportname)</script></button>
-            <button type="submit" class="btn btn-primary">Generate</button>
-          </div>
-        </div>
-      </form:form>
-    </div>
-  </div>
-</div>
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+ <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -167,7 +87,7 @@ pageEncoding="ISO-8859-1"%>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
       <h1 class="page-header">Summary Reports</h1>
-      <div class="btn-group">
+       <div class="btn-group">
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
           Generate New Report <span class="caret"></span>
           </button>
@@ -177,6 +97,7 @@ pageEncoding="ISO-8859-1"%>
        		</c:forEach>
        </ul>
         </div>
+      
        
       
       
@@ -195,28 +116,40 @@ pageEncoding="ISO-8859-1"%>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1,001</td>
-                <td>06/23/2014 00:00:00</td>
+               <c:forEach var = "transaction" items = "${transactionList}">
+               <tr>
+                <td>${transaction.reportid}</td>
+                <td>${transaction.date}</td>
                 <td>
-                  <div class="center-block">
-                    <span class="label label-primary">Processing</span>
-                  </div>
+                  <c:forEach var = "output" items = "${transaction.arroutput}">
+                    <c:choose>
+                      <c:when test = "${output.status == 'In progress'}">
+                        <span class="label label-primary">${output.outputid} &nbsp; ${output.status}</span>
+                      </c:when>
+                      <c:when test = "${output.status == 'Fail'}">
+                        <span class="label label-danger">${output.outputid} &nbsp; ${output.status}</span>
+                      </c:when>
+                      <c:otherwise>
+                        <span class="label label-warning">${output.outputid} &nbsp; 	 ${output.status}</span>
+                      </c:otherwise>
+                    </c:choose>
+                  </c:forEach> 
                 </td>
                 <td>
                   <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span>Excel</button>
-                    <button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-search"></span>PDF</button>
+                  <c:forEach var = "output" items = "${transaction.arroutput}">                      
+                       <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.outputid}</a >
+                  </c:forEach> 
                   </div>
                 </td>
                 <td>
-                  <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal"><span class="glyphicon"></span>Generate</button>
+                  <a  href="/report/uitest3?transactionID=${transaction.id}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> Generate </a>
                 </td>
-                
                 <td>
-                  <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon"></span>Delete</button>
+                  <a  href="/report/delete?reportTypeName=${transaction.reportid}" class="btn btn-danger btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> delete </a>
                 </td>
-              </tr>
+                </tr>
+              </c:forEach>
               
             </tbody>
           </table>

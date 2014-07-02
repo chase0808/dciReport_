@@ -10,9 +10,9 @@
 <title>Insert title here</title>
 </head>
 <body>
+<p>Hello</p>
+<p>${transaction.para}</p>
 
-<p>${report.startdate}</p>
-<p>${report.enddate}</p>
-<p>${report.para}</p>
+
 
 </html>
