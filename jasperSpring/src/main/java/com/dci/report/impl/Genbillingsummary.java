@@ -25,6 +25,9 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
@@ -93,25 +96,68 @@ public class Genbillingsummary implements Reportgenerateservice {
 		}
 
 		JRResultSetDataSource ds = new JRResultSetDataSource(resultSet);
+		String printFileName = null;
 		try {
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
 
 			"C:\\Users\\ldong\\workspace\\jasperSpring\\summary.jasper",
 					new HashMap<String, Object>(), ds);
+			FileOutputStream oStream = new FileOutputStream(
+					"C:\\Users\\ldong\\Desktop\\sample.xls");
+			jasperPrint.setProperty("net.sf.jasperreports.export.xls.create.custom.palette", "false");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.one.page.per.sheet", "false");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.remove.empty.space.between.rows", "true");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.remove.empty.space.between.columns", "true");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.white.page.background", "false");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.detect.cell.type", "true");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.size.fix.enabled", "false");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.ignore.graphics", "true");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.collapse.row.span", "true");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.ignore.cell.border", "true");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.ignore.cell.background", "false");
+		    //jasperPrint.setProperty("net.sf.jasperreports.export.xls.max.rows.per.sheet", "0");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.wrap.text", "true");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.use.timezone", "false");
+		    jasperPrint.setProperty("net.sf.jasperreports.print.keep.full.text", "true");
+		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1","columnHeader");
+			JRXlsExporter exporter = new JRXlsExporter();
+			exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+			exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(oStream));
+			SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+			configuration.setOnePagePerSheet(true);
+			configuration.setDetectCellType(true);
+			configuration.setCollapseRowSpan(false);
+			exporter.setConfiguration(configuration);
+			exporter.exportReport();
+			
+			
+			/*
+			exporter
+					.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+			
+			exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, oStream);
+			exporter.setParameter(
+					JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,
+					Boolean.TRUE);
+			exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET,
+					Boolean.FALSE);
+			exporter.setParameter(
+					JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,
+					Boolean.FALSE);
+			exporter.exportReport();
+			
+
 
 			JasperExportManager
 					.exportReportToPdfFile(jasperPrint,
-							"C:\\Users\\ldong\\workspace\\jasperSpring\\summary.pdf");
-            JRXlsExporter exporter = new JRXlsExporter();
+							"C:\\Users\\ldong\\Desktop\\summary.pdf");
+			*/
 
-            exporter.setParameter(JRExporterParameter.INPUT_FILE_NAME,
-                  jasperPrint);
-            exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME,
-                  "C://sample_report.xls");
 
-            exporter.exportReport();
- 
 		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

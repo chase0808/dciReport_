@@ -8,11 +8,18 @@
 <title>Form</title>
 </head>
 <body>
-	<form:form method="POST" action="/report/regenerate">
+	<form:form method="POST" action="/report/delete">
 		<table>
 			<tr>
-				<td><form:label path="t.i">number</form:label></td>
-				<td><form:input path="t.i" /></td>
+				<td><form:label path="test.t">number</form:label></td>
+				<td><form:input path="test.t" /></td>
+			</tr>
+			<tr>
+				<td><form:input type="hidden" path="temp" value="sss" /></td>
+			</tr>
+			<tr>
+				<td><form:label path="test.t">number</form:label></td>
+				<td><form:input path="test.t" /></td>
 			</tr>
 			<tr>
 				<td colspan="4"><input type="submit" value="regenerate" /></td>

@@ -43,7 +43,8 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String test(Model model) {
+	public ModelAndView test(Model model) {
+		return new ModelAndView("test", "command", new Report());
 //		Transaction test = new Transaction();
 //		test.setUserid(2);
 //		test.setReportid(1);
@@ -70,17 +71,17 @@ public class HomeController {
 //		test.setOutput(temp2);
 //		reportdataservice.create(test);
 		
-		ArrayList<Transaction> t = (ArrayList<Transaction>) reportdataservice.listTransaction();
-		System.out.println("Successful!");
-		System.out.println(t.get(0).getDate().toString());
-		System.out.println(t.get(0).getId());
-		System.out.println(t.get(0).getPara().get(2).getValue().get(0));
-		System.out.println(t.get(0).getPara().get(2).getValue().get(1));
-		System.out.println(t.get(0).getArroutput().get(0).getFilename());
+//		ArrayList<Transaction> t = (ArrayList<Transaction>) reportdataservice.listTransaction();
+//		System.out.println("Successful!");
+//		System.out.println(t.get(0).getDate().toString());
+//		System.out.println(t.get(0).getId());
+//		System.out.println(t.get(0).getPara().get(2).getValue().get(0));
+//		System.out.println(t.get(0).getPara().get(2).getValue().get(1));
+//		System.out.println(t.get(0).getArroutput().get(0).getFilename());
 //		reportdataservice.delete(10);
 //		System.out.println("Successful");
-		model.addAttribute("transaction", t.get(0));
-		return "redirect:genbillingsummary";
+//		model.addAttribute("transaction", t.get(0));
+//		return "redirect:genbillingsummary";
 
 	}
 
@@ -97,6 +98,9 @@ public class HomeController {
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String delete(Report report, ModelMap model) {
 		System.out.println("I am in the delete!");
+		System.out.println(report.getTest().getT());
+		System.out.println(report.getArrtest().get(0).getT());
+		System.out.println(report.getTemp());
 		// int reportid = report.getId();
 		// reportdataservice.delete(reportid);
 		return "successview";
