@@ -10,36 +10,6 @@ public class Report {
 	private String type;
 	private String enddate;
 	private ArrayList<Integer> para = new ArrayList<Integer>();
-	private Test test;
-	private ArrayList<Test> arrtest = new ArrayList<Test>();
-	private String temp;
-
-	public String getTemp() {
-		return temp;
-	}
-
-	public void setTemp(String temp) {
-		this.temp = temp;
-		arrtest.add(test);
-		System.out.println("I am in the setTemp!");
-	}
-
-	public Test getTest() {
-		test = new Test();
-		return test;
-	}
-
-	public void setTest(Test test) {
-		this.test = test;
-	}
-
-	public ArrayList<Test> getArrtest() {
-		return arrtest;
-	}
-
-	public void setArrtest(ArrayList<Test> arrtest) {
-		this.arrtest = arrtest;
-	}
 
 	public Report() {
 	};
@@ -61,7 +31,6 @@ public class Report {
 	}
 
 	public void setStartdate(String startdate) {
-		arrtest.add(test);
 		this.startdate = startdate;
 	}
 

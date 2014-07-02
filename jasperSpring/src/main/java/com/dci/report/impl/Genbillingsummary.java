@@ -1,10 +1,5 @@
 package com.dci.report.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -25,21 +20,21 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 
+import com.dci.report.bean.Reportoutput;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
 import com.dci.report.services.Reportgenerateservice;
 
+@SuppressWarnings("deprecation")
 public class Genbillingsummary implements Reportgenerateservice {
 	private DataSource dataSource;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public String generatereport(Transaction transaction) {
-
+		
+		String jasperFilelocation = "C:\\Users\\ldong\\workspace\\jasperSpring\\summary.jasper";
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date startdate = null;
 		Date enddate = null;
@@ -50,14 +45,12 @@ public class Genbillingsummary implements Reportgenerateservice {
 			case 1 : try {
 					startdate = format.parse(reportpara.getValue().get(0));
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
 			case 2 : try {
 					enddate = format.parse(reportpara.getValue().get(0));
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
@@ -70,6 +63,7 @@ public class Genbillingsummary implements Reportgenerateservice {
 		ResultSet resultSet = null;
 		CallableStatement stmt = null;
 		Connection c = null;
+		ArrayList<Reportoutput> arroutput = transaction.getArroutput();
 		String SQL = "CALL ZDBXUTIL01.SPR1_GETSUMMARYREPORT(?,?,?,?)";
 		try {
 			
@@ -96,74 +90,89 @@ public class Genbillingsummary implements Reportgenerateservice {
 		}
 
 		JRResultSetDataSource ds = new JRResultSetDataSource(resultSet);
-		String printFileName = null;
 		try {
-			JasperPrint jasperPrint = JasperFillManager.fillReport(
-
-			"C:\\Users\\ldong\\workspace\\jasperSpring\\summary.jasper",
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperFilelocation,
 					new HashMap<String, Object>(), ds);
-			FileOutputStream oStream = new FileOutputStream(
-					"C:\\Users\\ldong\\Desktop\\sample.xls");
-			jasperPrint.setProperty("net.sf.jasperreports.export.xls.create.custom.palette", "false");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.one.page.per.sheet", "false");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.remove.empty.space.between.rows", "true");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.remove.empty.space.between.columns", "true");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.white.page.background", "false");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.detect.cell.type", "true");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.size.fix.enabled", "false");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.ignore.graphics", "true");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.collapse.row.span", "true");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.ignore.cell.border", "true");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.ignore.cell.background", "false");
-		    //jasperPrint.setProperty("net.sf.jasperreports.export.xls.max.rows.per.sheet", "0");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.wrap.text", "true");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.use.timezone", "false");
-		    jasperPrint.setProperty("net.sf.jasperreports.print.keep.full.text", "true");
-		    jasperPrint.setProperty("net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1","columnHeader");
-			JRXlsExporter exporter = new JRXlsExporter();
-			exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-			exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(oStream));
-			SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
-			configuration.setOnePagePerSheet(true);
-			configuration.setDetectCellType(true);
-			configuration.setCollapseRowSpan(false);
-			exporter.setConfiguration(configuration);
-			exporter.exportReport();
+			addPropertiesToJasperPrintForExcel(jasperPrint);
+			for( int i = 0; i < arroutput.size(); i++ ) {
+				switch(arroutput.get(i).getOutputid()) {
+				case 1 : createXlsReport(jasperPrint, arroutput.get(i));
+					break;
+				case 2 : createXlsxReport(jasperPrint, arroutput.get(i));
+						 createPdfReport(jasperPrint, arroutput.get(i));
+					break;
+				}
+			}
 			
-			
-			/*
-			exporter
-					.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-			
-			exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, oStream);
-			exporter.setParameter(
-					JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,
-					Boolean.TRUE);
-			exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET,
-					Boolean.FALSE);
-			exporter.setParameter(
-					JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,
-					Boolean.FALSE);
-			exporter.exportReport();
-			
-
-
-			JasperExportManager
-					.exportReportToPdfFile(jasperPrint,
-							"C:\\Users\\ldong\\Desktop\\summary.pdf");
-			*/
-
 
 		} catch (JRException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 		return null;
 	}
 	
+	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output) {
+		String outputname = output.getFilename();
+		String destination = "C:\\Users\\ldong\\Desktop\\" + outputname + ".pdf";
+		try {
+			JasperExportManager.exportReportToPdfFile(jasperPrint, destination);
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+		System.out.println("PDF Report generated");
+		
+	}
+
+	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output) {
+		String outputname = output.getFilename();
+		String destination = "C:\\Users\\ldong\\Desktop\\" + outputname + ".xlsx";
+		try{
+			JRXlsxExporter xlsxexporter = new JRXlsxExporter();
+			xlsxexporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+			xlsxexporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, destination );
+			xlsxexporter.exportReport();
+			System.out.println("Xlsx Report generated");
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+
+	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output) {
+		String outputname = output.getFilename();
+		String destination = "C:\\Users\\ldong\\Desktop\\" + outputname + ".xls";
+		try {
+			JRXlsExporter exporter = new JRXlsExporter();
+			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+			exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, destination );
+			exporter.setParameter(JRXlsExporterParameter.IS_IGNORE_CELL_BORDER, Boolean.TRUE);
+			exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
+			exporter.exportReport();
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Xls Report generated");
+	}
+
+	private void addPropertiesToJasperPrintForExcel(JasperPrint jasperPrint) {
+		jasperPrint.setProperty("net.sf.jasperreports.export.xls.create.custom.palette", "false");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.one.page.per.sheet", "true");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.remove.empty.space.between.rows", "true");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.remove.empty.space.between.columns", "true");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.white.page.background", "false");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.detect.cell.type", "true");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.size.fix.enabled", "false");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.ignore.graphics", "true");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.collapse.row.span", "true");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.ignore.cell.border", "true");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.ignore.cell.background", "false");
+	    //jasperPrint.setProperty("net.sf.jasperreports.export.xls.max.rows.per.sheet", "0");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.wrap.text", "true");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.use.timezone", "false");
+	    jasperPrint.setProperty("net.sf.jasperreports.print.keep.full.text", "true");
+	    jasperPrint.setProperty("net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1","columnHeader");
+		
+	}
+
 	public DataSource getDataSource() {
 		return dataSource;
 	}

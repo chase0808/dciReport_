@@ -37,6 +37,7 @@ public class TransactionParaExtractor implements ResultSetExtractor{
 				transaction.setReportid(rs.getInt("reportid"));
 				transaction.setDate(rs.getTimestamp("date"));
 				transaction.setGenMethod(rs.getString("description"));
+				transaction.setName(rs.getString("name"));
 				arrpara = transaction.getPara();
 				paramap = new HashMap<Integer, Reportpara>();
 				map.put(id, transaction);

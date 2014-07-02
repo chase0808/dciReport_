@@ -39,6 +39,6 @@ public class GenController {
 		Transaction transaction = (Transaction) model.get("transaction");
 		genbillingsummary.generatereport(transaction);
 		// reporthandleservice.generatereport(report);
-		return "test";
+		return "dashboard";
 	}
 }

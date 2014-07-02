@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Transaction {
 	private int id;
+	private String name;
 	private int userid;
 	private int reportid;
 	private Timestamp date;
@@ -16,6 +17,13 @@ public class Transaction {
 	
 	public Transaction(){};
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	public Transaction(int id){
 		this.id = id;
 	}
