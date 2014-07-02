@@ -1,14 +1,12 @@
 package com.dci.report.impl;
 
-import java.sql.Connection;
-import java.util.Date;
 import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,27 +57,28 @@ public class Reporthandleserviceimpl implements Reporthandleservice {
 		ResultSet resultSet = null;
 		CallableStatement stmt = null;
 		Connection c = null;
+
 		String SQL = "CALL ZDBXUTIL01.SPR1_GETSUMMARYREPORT(?,?,?,?)";
+
 		try {
-			
-			String idString =",";
-			
-			for (int i=0; i<report.getPara().size(); i++) {
-				
-				idString= idString +  "," + report.getPara().get(i);
+
+			String idString = ",";
+
+			for (int i = 0; i < report.getPara().size(); i++) {
+
+				idString = idString + "," + report.getPara().get(i);
 			}
-			
-			idString=idString.replace(",,","");
-			
+
+			idString = idString.replace(",,", "");
+
 			c = dataSource.getConnection();
 			stmt = c.prepareCall(SQL);
-			stmt.setString(1,"");
-			stmt.setDate(2, (java.sql.Date) sdate);
-			stmt.setDate(3, (java.sql.Date) edate);
-			stmt.setString(4,idString);
-			resultSet = stmt.executeQuery();	
-			
-			
+			stmt.setString(1, "");
+			stmt.setDate(2, sdate);
+			stmt.setDate(3, edate);
+			stmt.setString(4, idString);
+			resultSet = stmt.executeQuery();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -88,12 +87,13 @@ public class Reporthandleserviceimpl implements Reporthandleservice {
 		try {
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
 
-			"C:\\Users\\ldong\\workspace\\jasperSpring\\summary.jasper",
-					new HashMap<String, Object>(), ds);
+			"C:\\Users\\xqi\\eclipesworkspace\\jasperSpring\\summary1.jasper",
+
+			new HashMap<String, Object>(), ds);
 
 			JasperExportManager
 					.exportReportToPdfFile(jasperPrint,
-							"C:\\Users\\ldong\\workspace\\jasperSpring\\summary.pdf");
+							"C:\\Users\\xqi\\eclipesworkspace\\jasperSpring\\jasperSpringsummary.pdf");
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

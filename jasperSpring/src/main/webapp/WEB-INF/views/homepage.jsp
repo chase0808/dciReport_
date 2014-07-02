@@ -21,7 +21,7 @@
 <tbody>
 <c:forEach var="client"  items="${clientlist}" >
 <tr>
-	<td>${client.clientname}</td>
+	<td>${client.clientname}</td> n 
 
 <c:forEach var="department" items="${client.departments}">
  	<td>${department.departmentName}</td>

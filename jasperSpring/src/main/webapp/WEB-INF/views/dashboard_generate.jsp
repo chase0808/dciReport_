@@ -28,6 +28,13 @@ pageEncoding="ISO-8859-1"%>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script>
     var reportname;
+    $(window).load(function(){
+    $('#myModal').modal({
+        keyboard: false,
+        show: true
+    });
+	});
+    
     $(document).ready(function(){
  
     $('#myModal').on('hidden.bs.modal', function (e) {
@@ -54,7 +61,7 @@ pageEncoding="ISO-8859-1"%>
     </script>
     <link rel="stylesheet" href="<c:url value = "/resources/css/mktree.css" />" type="text/css">
   </head>
-  <body>
+  <body>		
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -67,39 +74,9 @@ pageEncoding="ISO-8859-1"%>
             <form:form role="form" method="POST" commandname="departments" action="/report/result" >
               <div class="form-group">
               
-             <form:label for="start_date" path="startdate">Start Date</form:label>
-              <form:input type="date" class="form-control" id="start_date" path="startdate"/>
+             	 ${formlayout.layoutHtml}
               
-              <form:label for="end_date" path="enddate">End Date</form:label>
-              <form:input type="date" class="form-control" id="end_date" path="enddate"/>
-                
-                
-                <div class="container">
-                  <div class="row">
-                    <div class="col-md-3 panel1">
-                      <div class="panel panel-default panel-primary ">
-                        <div class="panel-heading">Select Client</div>
-                        <div class="panel-body checkboxes">
-                          <ul class="mktree" id="tree1">
-                            <c:forEach var="client"  items="${clientlist}" >
-                            <li>${client.clientname}
-                              <c:forEach var="department" items="${client.departments}">
-                              <ul>
-                                <li>
-                                  
-                                  <label>
-                                    ${department.departmentName}
-                                   <form:checkbox path="para" value= " ${department.departmentID}"></form:checkbox>
-                                   
-                                  
-                                  
-                                </label>
-                                
-                              </li>
-                            </ul>
-                            </c:forEach>
-                          </li>
-                          </c:forEach>
+              
 
                           </ul>
                       </div>
