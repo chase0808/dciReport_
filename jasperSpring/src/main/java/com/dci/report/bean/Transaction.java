@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Transaction {
 	private int id;
-	private String reportTypename;
+
 	private int userid;
 	private int reportid;
 	private Timestamp date;
@@ -15,14 +15,6 @@ public class Transaction {
 	private ArrayList<Integer> output = new ArrayList<Integer>();
 	private ArrayList<Reportoutput> arroutput = new ArrayList<Reportoutput>();
 	private String test;
-
-	public String getReportTypename() {
-		return reportTypename;
-	}
-
-	public void setReportTypename(String reportTypename) {
-		this.reportTypename = reportTypename;
-	}
 
 	public Reportpara getReportpara() {
 		return reportpara;

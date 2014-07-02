@@ -89,8 +89,10 @@ public class HomeController {
 		Map<String, List<Reportpara>> reportToPara = reportdataservice
 				.reportParaMap();
 		String reportTypeName = reportdataservice.getTransaction(transactionID)
+				.getName();
+		List<Reportpara> reportpara = reportToPara.get(reportTypeName);
 		ModelAndView modelandview = new ModelAndView("dashboard_regenerate",
-				"command", new Report());
+				"command", reportpara);
 		List<String> reportTypeList = reportdataservice.listReportType();
 		List<Department> selectedDepartment = new ArrayList<Department>();
 		String html = "";
