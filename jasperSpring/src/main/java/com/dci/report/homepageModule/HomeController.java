@@ -191,7 +191,7 @@ public class HomeController {
 		//reportdataservice.delete(10);
 		System.out.println("Successful");
 		model.addAttribute("transaction", t.get(0));
-		return "redirect:genbillingsummary";
+		return "redirect:genbillingdeital";
 
 	}
 
