@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import com.dci.report.bean.Client;
-import com.dci.report.bean.Report;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
 
@@ -27,4 +26,10 @@ public interface Reportdataservice {
 	public List<String> listReportType();
 
 	public Map<String, List<Reportpara>> reportParaMap();
+
+	public Map<String, List<Integer>> reportOutputIDMap();
+
+	public int getReportID(String reportTypename);
+
+	public int getMaxTid();
 }
