@@ -30,7 +30,7 @@ public class Logincontroller {
 		
 		if (userid != 0) {
 			model.addAttribute("userid", userid);
-			return "redirect:test";
+			return "redirect:uitest";
 		} else
 			return "redirect:login";
 	}
