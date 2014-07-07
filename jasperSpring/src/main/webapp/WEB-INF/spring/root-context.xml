@@ -68,4 +68,8 @@
 	<bean id="Genbillingsummary" class="com.dci.report.impl.Genbillingsummary">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
+		<bean id="Genbillingdetail" class="com.dci.report.impl.Genbillingdetail">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
 </beans>

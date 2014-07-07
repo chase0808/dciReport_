@@ -51,8 +51,7 @@ public class HomeController {
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
 		List<Client> clientList = (reporthandleservice.getClientMap());
-		ModelAndView modelandview = new ModelAndView("dashboard", "command",
-				transactionList.get(0));
+		ModelAndView modelandview = new ModelAndView("dashboard");
 		List<String> reportTypeList = reportdataservice.listReportType();
 		modelandview.addObject("reportTypeList", reportTypeList);
 		modelandview.addObject("clientlist", clientList);
@@ -72,13 +71,14 @@ public class HomeController {
 		Map<String, List<Integer>> reportToOutputID = reportdataservice
 				.reportOutputIDMap();
 		int reportID = reportdataservice.getReportID(reportTypename);
-		System.out.println("reportID:" + reportID);
+
 		List<Integer> outputIDs = reportToOutputID.get(reportTypename);
 		List<Reportpara> reportpara = reportToPara.get(reportTypename);
 
 		Transaction transaction = new Transaction(
 				(ArrayList<Reportpara>) reportpara);
 		transaction.setReportid(reportID);
+		System.out.println("ID: " + transaction.getReportid());
 		ModelAndView modelandview = new ModelAndView("dashboard_generate",
 				"command", transaction);
 		modelandview.addObject("clientlist", clientList);
@@ -120,7 +120,6 @@ public class HomeController {
 		for (Reportoutput reportoutput : transactionOutput) {
 			transactionOuputIDs.add(reportoutput.getOutputid());
 		}
-		System.out.println(transactionOuputIDs.toString());
 		for (Reportpara para : reportParaValue) {
 			int paraID = para.getId();
 			ArrayList<String> paraValues = para.getValue();
@@ -145,6 +144,9 @@ public class HomeController {
 						+ "<div class=\"panel-body checkboxes\">"
 						+ " <ul class=\"mktree\" id=\"tree1\">";
 				int count = 1;
+				for (int i = 0; i < para.getValue().size(); i++) {
+					System.out.println("para value" + para.getValue().get(i));
+				}
 				for (Client client : clientList) {
 					html += "<li>" + client.getClientname();
 					for (Department department : client.getDepartments()) {
@@ -154,11 +156,13 @@ public class HomeController {
 								+ " name=\"para\" type=\"checkbox\" value=\""
 								+ department.getDepartmentID() + "\"";
 						boolean flag = false;
+
 						for (int i = 0; i < para.getValue().size(); i++) {
 							if (Integer.toString(department.getDepartmentID())
 									.equals(para.getValue().get(i))) {
 								flag = true;
 								selectedDepartment.add(department);
+
 							}
 						}
 						if (flag) {
@@ -173,6 +177,8 @@ public class HomeController {
 				break;
 			}
 		}
+		System.out.println("selectedDepartment size:"
+				+ selectedDepartment.size());
 		FormLayout formlayout = new FormLayout();
 		formlayout.setLayoutHtml(html);
 		modelandview.addObject("reportParaValue", reportParaValue);
@@ -251,15 +257,21 @@ public class HomeController {
 		// reportdataservice.delete(10);
 		System.out.println("Successful");
 		model.addAttribute("transaction", t.get(0));
-		return "redirect:genbillingsummary";
+		return "redirect:genbillingdeital";
 
 	}
 
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public String generate(Transaction transaction, ModelMap model) {
+		System.out.println("reportID:" + transaction.getReportid());
 		reportdataservice.create(transaction);
 		int tid = reportdataservice.getMaxTid();
+		System.out.println("In generate para size"
+				+ transaction.getPara().get(2).getValue().size());
 		Transaction t1 = reportdataservice.getTransaction(tid);
+		System.out.println("In generate para size"
+				+ t1.getPara().get(2).getValue().size());
+		System.out.println("reportID:" + transaction.getReportid());
 		model.addAttribute("transaction", t1);
 		String genMethod = t1.getGenMethod();
 
@@ -268,11 +280,11 @@ public class HomeController {
 
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public String delete(Report report, ModelMap model) {
-		// int reportid = report.getId();
-		// reportdataservice.delete(reportid);
-		return "successview";
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public String delete(@RequestParam("transactionID") int transactionID,
+			ModelMap model) {
+		reportdataservice.delete(transactionID);
+		return "redirect: uitest";
 	}
 
 }

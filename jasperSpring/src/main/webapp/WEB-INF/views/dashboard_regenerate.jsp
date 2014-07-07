@@ -51,7 +51,10 @@ pageEncoding="ISO-8859-1"%>
     //$(this).find('#selectedClient').val('');
     //$('form').find('input[type=date], input[type=checkbox], input[type=number], input[type=email], textarea').val('');
     });
-    $("input[type='checkbox']").change(function(){
+    
+    
+    
+    $("input[type='checkbox'][id!='_output']").change(function(){
     var value = $(this).val();
     var deptname = $(this).parent("label").text();
     if(this.checked){
@@ -78,6 +81,7 @@ pageEncoding="ISO-8859-1"%>
           </div>
           <div class="modal-body ">
             <form:form role="form" method="POST"  action="/report/generate" >
+            <form:hidden path="reportid" value="${command.reportid}"></form:hidden>
               <div class="form-group">
                 <c:forEach var="parameters"  items="${reportParaValue}" varStatus="i">
                 
@@ -220,11 +224,11 @@ pageEncoding="ISO-8859-1"%>
         
         <c:when test="${flag eq true}">
         
-      <form:checkbox path="output" value= " ${outputID}" checked="true"></form:checkbox>XLS
+      <form:checkbox path="output" value= " ${outputID}" checked="true" id="_output"></form:checkbox>XLS
       </c:when>
       <c:otherwise>
       
-    <form:checkbox path="output" value= " ${outputID}"></form:checkbox>XLS
+    <form:checkbox path="output" value= " ${outputID}" id="_output"></form:checkbox>XLS
     </c:otherwise>
     </c:choose>
     </c:if>
@@ -324,10 +328,10 @@ Generate New Report <span class="caret"></span>
       </div>
     </td>
     <td>
-      <a  href="/report/uitest3?transactionID=${transaction.id}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> Generate </a>
+      <a  href="/report/uitest3?transactionID=${transaction.id}" class="btn btn-default btn-xs" role="button">Generate </a>
     </td>
     <td>
-      <a  href="/report/delete?reportTypeName=${transaction.reportid}" class="btn btn-danger btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> delete </a>
+      <a  href="/report/delete?transactionID=${transaction.id}" class="btn btn-danger btn-xs" role="button">delete</a>
     </td>
   </tr>
   </c:forEach>

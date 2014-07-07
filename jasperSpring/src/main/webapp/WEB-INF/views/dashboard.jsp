@@ -138,15 +138,15 @@ pageEncoding="ISO-8859-1"%>
                 <td>
                   <div class="btn-group">
                   <c:forEach var = "output" items = "${transaction.arroutput}">                      
-                       <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
+                       <a href="file:///C:/Users/xqi/Desktop/${output.filename}.${output.type}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
                   </c:forEach> 
                   </div>
                 </td>
                 <td>
-                  <a  href="/report/uitest3?transactionID=${transaction.id}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> Generate </a>
+                  <a  href="/report/uitest3?transactionID=${transaction.id}" class="btn btn-default btn-xs" role="button">Generate</a>
                 </td>
                 <td>
-                  <a  href="/report/delete?reportTypeName=${transaction.reportid}" class="btn btn-danger btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> delete </a>
+                  <a  href="/report/delete?transactionID=${transaction.id}" class="btn btn-danger btn-xs" role="button">delete</a>
                 </td>
                 </tr>
               </c:forEach>
