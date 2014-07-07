@@ -26,7 +26,7 @@ import com.dci.report.services.Reportdataservice;
 import com.dci.report.services.Reporthandleservice;
 
 @Controller
-@SessionAttributes(value = { "transaction" })
+@SessionAttributes(value = { "transaction", "userid" })
 public class HomeController {
 
 	@Autowired
@@ -153,7 +153,9 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String test(Model model) {
+	public String test(ModelMap model) {
+		int userid = (Integer) model.get("userid");
+		System.out.println(userid);
 		// Transaction test = new Transaction();
 		// test.setUserid(2);
 		// test.setReportid(1);
@@ -179,24 +181,27 @@ public class HomeController {
 		// temp2.add(2);
 		// test.setOutput(temp2);
 		// reportdataservice.create(test);
+		
 
-		ArrayList<Transaction> t = (ArrayList<Transaction>) reportdataservice
-				.listTransaction();
-		System.out.println("Successful!");
-		System.out.println(t.get(0).getDate().toString());
-		System.out.println(t.get(0).getId());
-		System.out.println(t.get(0).getPara().get(2).getValue().get(0));
-		System.out.println(t.get(0).getPara().get(2).getValue().get(1));
-		System.out.println(t.get(0).getArroutput().get(0).getFilename());
-		//reportdataservice.delete(10);
-		System.out.println("Successful");
-		model.addAttribute("transaction", t.get(0));
-		return "redirect:genbillingdeital";
+//		ArrayList<Transaction> t = (ArrayList<Transaction>) reportdataservice
+//				.listTransaction();
+//		System.out.println("Successful!");
+//		System.out.println(t.get(0).getDate().toString());
+//		System.out.println(t.get(0).getId());
+//		System.out.println(t.get(0).getPara().get(2).getValue().get(0));
+//		System.out.println(t.get(0).getPara().get(2).getValue().get(1));
+//		System.out.println(t.get(0).getArroutput().get(0).getFilename());
+//		//reportdataservice.delete(10);
+//		System.out.println("Successful");
+//		model.addAttribute("transaction", t.get(0));
+		return "redirect:login";
 
 	}
 
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public String generate(Transaction transaction, ModelMap model) {
+		int userid = (Integer) model.get("userid");
+		transaction.setUserid(userid);
 		reportdataservice.create(transaction);
 		String genMethod = transaction.getGenMethod();
 		model.addAttribute("transaction", transaction);

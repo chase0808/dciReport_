@@ -7,9 +7,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@SessionAttributes(value = { "transaction", "userid" })
 public class Logincontroller {
 
 	@Autowired
@@ -24,11 +26,11 @@ public class Logincontroller {
 	@RequestMapping(value = "/logining", method = RequestMethod.POST)
 	public String login(@ModelAttribute("SpringWeb") User user, ModelMap model) {
 
-		String returnVal = loginservice.validate(user);
-		model.addAttribute("returnvalue", returnVal);
-
-		if (returnVal.equals("welcome")) {
-			return "redirect:homepage";
+		int userid = loginservice.validate(user);
+		
+		if (userid != 0) {
+			model.addAttribute("userid", userid);
+			return "redirect:test";
 		} else
 			return "redirect:login";
 	}

@@ -10,12 +10,14 @@ public class LoginServiceimpl implements LoginService {
 		this.logindaoservice = logindaoservice;
 	}
 	@Override
-	public String validate(User user) {
+	public int validate(User user) {
 		String password = user.getPassword();
-		if( password.equals(logindaoservice.getUserInfo(user.getUsername()))) 
-			return "welcome";
+		if( password.equals(logindaoservice.getUserInfo(user.getUsername()))) {
+			int userid = logindaoservice.getUserid(user.getUsername());
+			return userid;
+		}
 		else
-			return "Incorrect username or password!";
+			return 0;
 	}
 
 }
