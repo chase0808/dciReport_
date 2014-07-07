@@ -12,6 +12,7 @@
 <body>
 <p>Hello</p>
 <p>${transaction.para}</p>
+<p>${transaction.output}</p>
 
 
 

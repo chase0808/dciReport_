@@ -72,16 +72,23 @@ pageEncoding="ISO-8859-1"%>
             <h4 class="modal-title" id="myModalLabel">Criteria</h4>
           </div>
           <div class="modal-body ">
-            <form:form role="form" method="POST" commandname="departments" action="/report/result" >
+            <form:form role="form" method="POST" commandname="departments" action="/report/generate" >
               <div class="form-group">
                 <c:forEach var="parameters"  items="${command.para}" varStatus="i">
                 
                 <c:if test="${parameters.id == '1'}">
+                 <form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
+                 
                  <form:label for="start_date" path="reportpara.value">Start Date</form:label>
+                  
                  <form:input type="date" class="form-control" id="start_date" path="para[${i.index}].value"  />
                 </c:if>
                 <c:if test="${parameters.id == '2'}">
+                  <form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
+                 
+                  
                   <form:label for="end_date" path="reportpara.value">End Date</form:label>
+                   
                   <form:input type="date" class="form-control" id="start_date" path="para[${i.index}].value"  />
                 </c:if>
                 <c:if test="${parameters.id == '3'}">
@@ -98,10 +105,12 @@ pageEncoding="ISO-8859-1"%>
                               <ul>
                                 <li>
                                   
-                                  <label>
+                                  <label> 
                                     ${department.departmentName}
-                                  <form:checkbox path="para[${i.index}].value" value= " ${department.departmentID}"></form:checkbox>
-                                  
+                                 
+                                  <form:checkbox path="para[${i.index}].value" value= "${department.departmentID}"></form:checkbox>
+                                  <form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
+                                 
                                   
                                   
                                 </label>
@@ -132,6 +141,20 @@ pageEncoding="ISO-8859-1"%>
               
              
               </c:forEach>
+              
+              <h4>Output Type</h4>
+              <c:forEach var="outputID" items="${outputIDs}" >
+                <label class="checkbox-inline">
+                  <c:if test="${outputID == '1'}">
+                  <form:checkbox path="output" value= " ${outputID}"></form:checkbox>PDF
+                </c:if>
+                <c:if test="${outputID == '2'}">
+                  <form:checkbox path="output" value= " ${outputID}"></form:checkbox>XLS
+                </c:if>
+                </label>
+              </c:forEach>
+             
+              
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"> Close </button>
                 <button type="submit" class="btn btn-primary">Generate</button>
@@ -203,19 +226,19 @@ pageEncoding="ISO-8859-1"%>
               <tbody>
                 <c:forEach var = "transaction" items = "${transactionList}">
                 <tr>
-                  <td>${transaction.reportid}</td>
+                  <td>${transaction.name}</td>
                   <td>${transaction.date}</td>
                   <td>
                     <c:forEach var = "output" items = "${transaction.arroutput}">
                     <c:choose>
                     <c:when test = "${output.status == 'In progress'}">
-                    <span class="label label-primary">${output.outputid} &nbsp; ${output.status}</span>
+                    <span class="label label-primary">${output.type} &nbsp; ${output.status}</span>
                     </c:when>
                     <c:when test = "${output.status == 'Fail'}">
-                    <span class="label label-danger">${output.outputid} &nbsp; ${output.status}</span>
+                    <span class="label label-danger">${output.type} &nbsp; ${output.status}</span>
                     </c:when>
                     <c:otherwise>
-                    <span class="label label-warning">${output.outputid} &nbsp;    ${output.status}</span>
+                    <span class="label label-warning">${output.type} &nbsp;    ${output.status}</span>
                     </c:otherwise>
                     </c:choose>
                     </c:forEach>
@@ -223,7 +246,7 @@ pageEncoding="ISO-8859-1"%>
                   <td>
                     <div class="btn-group">
                       <c:forEach var = "output" items = "${transaction.arroutput}">
-                    <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.outputid}</a >
+                    <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
                     </c:forEach>
                   </div>
                 </td>

@@ -33,6 +33,12 @@ pageEncoding="ISO-8859-1"%>
     keyboard: false,
     show: true
     });
+    
+    $('#selected').attr('checked','checked');
+    var deptname = $('#selected').parent("label").text();
+    var txt1 = "<p class = " + value +">" + deptname + "</p>";
+    alert(txt1);
+    $("#selectedClient").append(txt1);
     });
     
     $(document).ready(function(){
@@ -50,7 +56,7 @@ pageEncoding="ISO-8859-1"%>
     var deptname = $(this).parent("label").text();
     if(this.checked){
     var txt1 = "<p class = " + value +">" + deptname + "</p>";
-    alert(txt1);
+    
     $("#selectedClient").append(txt1);
     } else {
     $("p").remove("." + value);
@@ -58,9 +64,7 @@ pageEncoding="ISO-8859-1"%>
     });
     });
     </script>
-    <script id = "forEach">
     
-    </script>
     <link rel="stylesheet" href="<c:url value = "/resources/css/mktree.css" />" type="text/css">
   </head>
   <body>
@@ -68,21 +72,27 @@ pageEncoding="ISO-8859-1"%>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header"> 
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="myModalLabel">Criteria</h4>
           </div>
           <div class="modal-body ">
-            <form:form role="form" method="POST" commandname="departments" action="/report/result" >
+            <form:form role="form" method="POST"  action="/report/generate" >
               <div class="form-group">
-                <c:forEach var="parameters"  items="${command.para}" varStatus="i">
+                <c:forEach var="parameters"  items="${reportParaValue}" varStatus="i">
                 
                 <c:if test="${parameters.id == '1'}">
-              <form:label for="start_date" path="reportpara.value">Start Date</form:label>
+              <form:label for="start_date" path="para[${i.index}].value">Start Date</form:label>
+              <form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
+              
+              
               <form:input type="date" class="form-control" id="start_date" path="para[${i.index}].value" value="${parameters.value[0]}" />
                 </c:if>
                 <c:if test="${parameters.id == '2'}">
-              <form:label for="end_date" path="reportpara.value">End Date</form:label>
+              <form:label for="end_date" path="para[${i.index}].value">End Date</form:label>
+              <form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
+             
+              
               <form:input type="date" class="form-control" id="end_date" path="para[${i.index}].value" value="${parameters.value[0]}"/>
                 </c:if>
                 <c:if test="${parameters.id == '3'}">
@@ -99,22 +109,33 @@ pageEncoding="ISO-8859-1"%>
                               <ul>
                                 <li>
                                   
+                                  
                                   <label>
                                     ${department.departmentName}
                                     <c:set var="flag" scope="page" value="false"/>
                                     <c:forEach var="val" items="${parameters.value}">
+                                    
                                     <c:choose>
-                                    <c:when test="{val == ${department.departmentID} }">
+                                    <c:when test="${val == department.departmentID}">
+                                    
                                     <c:set var="flag" scope="page" value="true"/>
+                                    
                                     </c:when>
                                     </c:choose>
                                     </c:forEach>
                                     <c:choose>
-                                    <c:when test="{flag eq true}">
-                                  <form:checkbox path="para[${i.index}].value" value= "${department.departmentID}" checked></form:checkbox>
+                                    
+                                    <c:when test="${flag eq true}">
+                                    
+                                  <form:checkbox path="para[${i.index}].value" value= "${department.departmentID}" id="selected" checked="true"></form:checkbox>
+                                  <form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
                                   </c:when>
                                   <c:otherwise>
+                                  
                                 <form:checkbox path="para[${i.index}].value" value= " ${department.departmentID}"></form:checkbox>
+                                <form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
+                                
+                                
                                 </c:otherwise>
                                 </c:choose>
                                 
@@ -122,6 +143,9 @@ pageEncoding="ISO-8859-1"%>
                                 
                                 
                               </label>
+                              
+                              
+                              
                               
                             </li>
                           </ul>
@@ -137,7 +161,9 @@ pageEncoding="ISO-8859-1"%>
                   <div class="panel panel-default panel-primary">
                     <div class="panel-heading">Selected Client</div>
                     <div class="panel-body"  id="selectedClient" >
-                      
+                      <c:forEach var="d" items="${selectedDepartment}">
+                      <p class="${d.departmentID}">${d.departmentName}</p>
+                      </c:forEach>
                     </div>
                   </div>
                 </div>
@@ -149,117 +175,167 @@ pageEncoding="ISO-8859-1"%>
           
           
           </c:forEach>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"> Close </button>
-            <button type="submit" class="btn btn-primary">Generate</button>
-          </div>
           
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"> <script>document.write(reportname)</script></button>
-            <button type="submit" class="btn btn-primary">Generate</button>
-          </div>
-        </div>
-      </form:form>
-    </div>
+          <h4>Output Type</h4>
+          <c:forEach var="outputID" items="${outputIDs}" >
+          <label class="checkbox-inline">
+            <c:if test="${outputID == '1'}">
+            <c:set var="flag" scope="page" value="false"/>
+            <c:forEach var="val" items="${transactionOuputIDs}">
+            
+            <c:choose>
+            <c:when test="${val == outputID}">
+            
+            <c:set var="flag" scope="page" value="true"/>
+            
+            </c:when>
+            </c:choose>
+            </c:forEach>
+            <c:choose>
+            
+            <c:when test="${flag eq true}">
+            
+          <form:checkbox path="output" value= " ${outputID}" checked="true"></form:checkbox>PDF
+          </c:when>
+          <c:otherwise>
+          
+        <form:checkbox path="output" value= " ${outputID}"></form:checkbox>PDF
+        </c:otherwise>
+        </c:choose>
+        
+        </c:if>
+        <c:if test="${outputID == '2'}">
+        <c:set var="flag" scope="page" value="false"/>
+        <c:forEach var="val" items="${transactionOuputIDs}">
+        
+        <c:choose>
+        <c:when test="${val == outputID}">
+        
+        <c:set var="flag" scope="page" value="true"/>
+        
+        </c:when>
+        </c:choose>
+        </c:forEach>
+        <c:choose>
+        
+        <c:when test="${flag eq true}">
+        
+      <form:checkbox path="output" value= " ${outputID}" checked="true"></form:checkbox>XLS
+      </c:when>
+      <c:otherwise>
+      
+    <form:checkbox path="output" value= " ${outputID}"></form:checkbox>XLS
+    </c:otherwise>
+    </c:choose>
+    </c:if>
+  </label>
+  </c:forEach>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary">Generate</button>
   </div>
+</div>
+</form:form>
+</div>
+</div>
 </div>
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">DCI Report</a>
-    </div>
-    <div class="navbar-collapse collapse">
-      <form class="navbar-form navbar-right">
-        <input type="text" class="form-control" placeholder="Search...">
-      </form>
-    </div>
-  </div>
+<div class="container-fluid">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="#">DCI Report</a>
+</div>
+<div class="navbar-collapse collapse">
+<form class="navbar-form navbar-right">
+<input type="text" class="form-control" placeholder="Search...">
+</form>
+</div>
+</div>
 </div>
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar">
-      <ul class="nav nav-sidebar">
-        <li><a href="#">Overview</a></li>
-        <li class="active"><a href="#">Summary Reports</a></li>
-        <li><a href="#">Executive Report</a></li>
-        <li><a href="#">Published Report</a></li>
-      </ul>
-    </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <h1 class="page-header">Summary Reports</h1>
-      <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-        Generate New Report <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <c:forEach var = "reportType" items = "${reportTypeList}">
-          <li><a  href="/report/uitest2?reportTypeName=${reportType}"> ${reportType} </a></li>
-          </c:forEach>
-        </ul>
+<div class="row">
+<div class="col-sm-3 col-md-2 sidebar">
+<ul class="nav nav-sidebar">
+<li><a href="#">Overview</a></li>
+<li class="active"><a href="#">Summary Reports</a></li>
+<li><a href="#">Executive Report</a></li>
+<li><a href="#">Published Report</a></li>
+</ul>
+</div>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<h1 class="page-header">Summary Reports</h1>
+<div class="btn-group">
+<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+Generate New Report <span class="caret"></span>
+</button>
+<ul class="dropdown-menu" role="menu">
+  <c:forEach var = "reportType" items = "${reportTypeList}">
+  <li><a  href="/report/uitest2?reportTypeName=${reportType}"> ${reportType} </a></li>
+  </c:forEach>
+</ul>
+</div>
+
+
+
+<h2 class="sub-header">Report History</h2>
+<div class="table-responsive">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Report Name</th>
+      <th>Timestamp</th>
+      <th>Status</th>
+      <th>Review</th>
+      <th>Generate</th>
+      
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <c:forEach var = "transaction" items = "${transactionList}">
+    <tr>
+      <td>${transaction.name}</td>
+      <td>${transaction.date}</td>
+      <td>
+        <c:forEach var = "output" items = "${transaction.arroutput}">
+        <c:choose>
+        <c:when test = "${output.status == 'In progress'}">
+        <span class="label label-primary">${output.type} &nbsp; ${output.status}</span>
+        </c:when>
+        <c:when test = "${output.status == 'Fail'}">
+        <span class="label label-danger">${output.type} &nbsp; ${output.status}</span>
+        </c:when>
+        <c:otherwise>
+        <span class="label label-warning">${output.type} &nbsp;    ${output.status}</span>
+        </c:otherwise>
+        </c:choose>
+        </c:forEach>
+      </td>
+      <td>
+        <div class="btn-group">
+          <c:forEach var = "output" items = "${transaction.arroutput}">
+        <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
+        </c:forEach>
       </div>
-      
-      
-      
-      <h2 class="sub-header">Report History</h2>
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Report Name</th>
-              <th>Timestamp</th>
-              <th>Status</th>
-              <th>Review</th>
-              <th>Generate</th>
-              
-              <th>Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            <c:forEach var = "transaction" items = "${transactionList}">
-            <tr>
-              <td>${transaction.reportid}</td>
-              <td>${transaction.date}</td>
-              <td>
-                <c:forEach var = "output" items = "${transaction.arroutput}">
-                <c:choose>
-                <c:when test = "${output.status == 'In progress'}">
-                <span class="label label-primary">${output.outputid} &nbsp; ${output.status}</span>
-                </c:when>
-                <c:when test = "${output.status == 'Fail'}">
-                <span class="label label-danger">${output.outputid} &nbsp; ${output.status}</span>
-                </c:when>
-                <c:otherwise>
-                <span class="label label-warning">${output.outputid} &nbsp;    ${output.status}</span>
-                </c:otherwise>
-                </c:choose>
-                </c:forEach>
-              </td>
-              <td>
-                <div class="btn-group">
-                  <c:forEach var = "output" items = "${transaction.arroutput}">
-                <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.outputid}</a >
-                </c:forEach>
-              </div>
-            </td>
-            <td>
-              <a  href="/report/uitest3?transactionID=${transaction.id}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> Generate </a>
-            </td>
-            <td>
-              <a  href="/report/delete?reportTypeName=${transaction.reportid}" class="btn btn-danger btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> delete </a>
-            </td>
-          </tr>
-          </c:forEach>
-          
-        </tbody>
-      </table>
-    </div>
-  </div>
+    </td>
+    <td>
+      <a  href="/report/uitest3?transactionID=${transaction.id}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> Generate </a>
+    </td>
+    <td>
+      <a  href="/report/delete?reportTypeName=${transaction.reportid}" class="btn btn-danger btn-xs" role="button"><span class="glyphicon glyphicon-search"></span> delete </a>
+    </td>
+  </tr>
+  </c:forEach>
+  
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <!-- Bootstrap core JavaScript

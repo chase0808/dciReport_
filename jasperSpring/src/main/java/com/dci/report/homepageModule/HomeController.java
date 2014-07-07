@@ -18,6 +18,7 @@ import com.dci.report.bean.Client;
 import com.dci.report.bean.Department;
 import com.dci.report.bean.FormLayout;
 import com.dci.report.bean.Report;
+import com.dci.report.bean.Reportoutput;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
 import com.dci.report.services.Reportdataservice;
@@ -68,14 +69,22 @@ public class HomeController {
 		List<String> reportTypeList = reportdataservice.listReportType();
 		Map<String, List<Reportpara>> reportToPara = reportdataservice
 				.reportParaMap();
+		Map<String, List<Integer>> reportToOutputID = reportdataservice
+				.reportOutputIDMap();
+		int reportID = reportdataservice.getReportID(reportTypename);
+		System.out.println("reportID:" + reportID);
+		List<Integer> outputIDs = reportToOutputID.get(reportTypename);
 		List<Reportpara> reportpara = reportToPara.get(reportTypename);
+
 		Transaction transaction = new Transaction(
 				(ArrayList<Reportpara>) reportpara);
+		transaction.setReportid(reportID);
 		ModelAndView modelandview = new ModelAndView("dashboard_generate",
 				"command", transaction);
 		modelandview.addObject("clientlist", clientList);
 		modelandview.addObject("reportTypeList", reportTypeList);
 		modelandview.addObject("transactionList", transactionList);
+		modelandview.addObject("outputIDs", outputIDs);
 		return modelandview;
 	}
 
@@ -91,13 +100,27 @@ public class HomeController {
 		String reportTypeName = reportdataservice.getTransaction(transactionID)
 				.getName();
 		List<Reportpara> reportpara = reportToPara.get(reportTypeName);
+
+		Transaction transaction = new Transaction(
+				(ArrayList<Reportpara>) reportpara);
 		ModelAndView modelandview = new ModelAndView("dashboard_regenerate",
-				"command", reportpara);
+				"command", transaction);
 		List<String> reportTypeList = reportdataservice.listReportType();
 		List<Department> selectedDepartment = new ArrayList<Department>();
 		String html = "";
 		ArrayList<Reportpara> reportParaValue = reportdataservice
 				.getTransaction(transactionID).getPara();
+		Map<String, List<Integer>> reportToOutputID = reportdataservice
+				.reportOutputIDMap();
+		List<Integer> outputIDs = reportToOutputID.get(reportdataservice
+				.getTransaction(transactionID).getName());
+		List<Integer> transactionOuputIDs = new ArrayList<Integer>();
+		List<Reportoutput> transactionOutput = reportdataservice
+				.getTransaction(transactionID).getArroutput();
+		for (Reportoutput reportoutput : transactionOutput) {
+			transactionOuputIDs.add(reportoutput.getOutputid());
+		}
+		System.out.println(transactionOuputIDs.toString());
 		for (Reportpara para : reportParaValue) {
 			int paraID = para.getId();
 			ArrayList<String> paraValues = para.getValue();
@@ -154,9 +177,12 @@ public class HomeController {
 		formlayout.setLayoutHtml(html);
 		modelandview.addObject("reportParaValue", reportParaValue);
 		modelandview.addObject("formlayout", formlayout);
+		modelandview.addObject("clientlist", clientList);
 		modelandview.addObject("reportTypeList", reportTypeList);
 		modelandview.addObject("transactionList", transactionList);
 		modelandview.addObject("selectedDepartment", selectedDepartment);
+		modelandview.addObject("outputIDs", outputIDs);
+		modelandview.addObject("transactionOuputIDs", transactionOuputIDs);
 		return modelandview;
 	}
 
@@ -175,9 +201,12 @@ public class HomeController {
 	@RequestMapping(value = "/result", method = RequestMethod.POST)
 	public ModelAndView showTestResult(Transaction transaction, Model model) {
 		System.out.println(transaction.getPara().size());
+		System.out.println(transaction.getId());
 		for (int i = 0; i < transaction.getPara().size(); i++) {
-			System.out.println(transaction.getPara().get(i).getValue());
+			System.out.println(transaction.getPara().get(i).getId());
+			System.out.print(transaction.getPara().get(i).getType());
 		}
+		System.out.println(transaction.getOutput().toString());
 		ModelAndView modelandview = new ModelAndView("result");
 		modelandview.addObject("transaction", transaction);
 		return modelandview;
@@ -220,7 +249,7 @@ public class HomeController {
 		System.out.println(t.get(0).getPara().get(2).getValue().get(1));
 		System.out.println(t.get(0).getArroutput().get(0).getFilename());
 		// reportdataservice.delete(10);
-		// System.out.println("Successful");
+		System.out.println("Successful");
 		model.addAttribute("transaction", t.get(0));
 		return "redirect:genbillingsummary";
 
@@ -229,8 +258,11 @@ public class HomeController {
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public String generate(Transaction transaction, ModelMap model) {
 		reportdataservice.create(transaction);
-		String genMethod = transaction.getGenMethod();
-		model.addAttribute("transaction", transaction);
+		int tid = reportdataservice.getMaxTid();
+		Transaction t1 = reportdataservice.getTransaction(tid);
+		model.addAttribute("transaction", t1);
+		String genMethod = t1.getGenMethod();
+
 		String output = "redirect:" + genMethod;
 		return output;
 
@@ -238,7 +270,6 @@ public class HomeController {
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String delete(Report report, ModelMap model) {
-		System.out.println("I am in the delete!");
 		// int reportid = report.getId();
 		// reportdataservice.delete(reportid);
 		return "successview";

@@ -5,7 +5,14 @@ public class Reportoutput {
 	private int outputid;
 	private String status;
 	private String filename;
+	private String type;
 	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public int getOutputid() {
 		return outputid;
 	}

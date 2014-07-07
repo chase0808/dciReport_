@@ -6,6 +6,8 @@ import java.util.ArrayList;
 public class Transaction {
 	private int id;
 
+	private String name;
+
 	private int userid;
 	private int reportid;
 	private Timestamp date;
@@ -14,6 +16,7 @@ public class Transaction {
 	private ArrayList<Reportpara> para = new ArrayList<Reportpara>();
 	private ArrayList<Integer> output = new ArrayList<Integer>();
 	private ArrayList<Reportoutput> arroutput = new ArrayList<Reportoutput>();
+
 	private String test;
 
 	public Reportpara getReportpara() {
@@ -44,7 +47,16 @@ public class Transaction {
 	public Transaction() {
 	};
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public Transaction(int id) {
+
 		this.id = id;
 	}
 

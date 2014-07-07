@@ -15,6 +15,7 @@ public class TransactionOpMapper implements RowMapper<Reportoutput> {
 		output.setOutputid(rs.getInt("outputid"));
 		output.setStatus(rs.getString("status"));
 		output.setFilename(rs.getString("filename"));
+		output.setType(rs.getString("type"));
 		return output;
 	}
 

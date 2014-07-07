@@ -118,19 +118,19 @@ pageEncoding="ISO-8859-1"%>
             <tbody>
                <c:forEach var = "transaction" items = "${transactionList}">
                <tr>
-                <td>${transaction.reportid}</td>
+                <td>${transaction.name}</td>
                 <td>${transaction.date}</td>
                 <td>
                   <c:forEach var = "output" items = "${transaction.arroutput}">
                     <c:choose>
                       <c:when test = "${output.status == 'In progress'}">
-                        <span class="label label-primary">${output.outputid} &nbsp; ${output.status}</span>
+                        <span class="label label-primary">${output.type} &nbsp; ${output.status}</span>
                       </c:when>
                       <c:when test = "${output.status == 'Fail'}">
-                        <span class="label label-danger">${output.outputid} &nbsp; ${output.status}</span>
+                        <span class="label label-danger">${output.type} &nbsp; ${output.status}</span>
                       </c:when>
                       <c:otherwise>
-                        <span class="label label-warning">${output.outputid} &nbsp; 	 ${output.status}</span>
+                        <span class="label label-warning">${output.type} &nbsp; 	 ${output.status}</span>
                       </c:otherwise>
                     </c:choose>
                   </c:forEach> 
@@ -138,7 +138,7 @@ pageEncoding="ISO-8859-1"%>
                 <td>
                   <div class="btn-group">
                   <c:forEach var = "output" items = "${transaction.arroutput}">                      
-                       <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.outputid}</a >
+                       <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
                   </c:forEach> 
                   </div>
                 </td>
