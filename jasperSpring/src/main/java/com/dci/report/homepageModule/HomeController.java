@@ -25,7 +25,7 @@ import com.dci.report.services.Reportdataservice;
 import com.dci.report.services.Reporthandleservice;
 
 @Controller
-@SessionAttributes(value = { "transaction" })
+@SessionAttributes(value = { "transaction", "userid" })
 public class HomeController {
 
 	@Autowired
@@ -219,7 +219,9 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String test(Model model) {
+	public String test(ModelMap model) {
+		int userid = (Integer) model.get("userid");
+		System.out.println(userid);
 		// Transaction test = new Transaction();
 		// test.setUserid(2);
 		// test.setReportid(1);
@@ -263,7 +265,9 @@ public class HomeController {
 
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public String generate(Transaction transaction, ModelMap model) {
-		System.out.println("reportID:" + transaction.getReportid());
+
+		int userid = (Integer) model.get("userid");
+		transaction.setUserid(userid);
 		reportdataservice.create(transaction);
 		int tid = reportdataservice.getMaxTid();
 		System.out.println("In generate para size"
