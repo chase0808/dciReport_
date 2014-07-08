@@ -34,6 +34,8 @@ pageEncoding="ISO-8859-1"%>
     show: true
     });
     
+ 
+    
     $('#selected').attr('checked','checked');
     var deptname = $('#selected').parent("label").text();
     var txt1 = "<p class = " + value +">" + deptname + "</p>";
@@ -42,7 +44,10 @@ pageEncoding="ISO-8859-1"%>
     });
     
     $(document).ready(function(){
-    
+       $(".deletedialog").click(function(){
+			var hrefvalue = $(this).attr('id');
+			$("#btnConfirm").attr('href', hrefvalue);
+		});
     $('#myModal').on('hidden.bs.modal', function (e) {
     //alert("show event fired!");
     $(this).find('form')[0].reset();
@@ -71,6 +76,24 @@ pageEncoding="ISO-8859-1"%>
     <link rel="stylesheet" href="<c:url value = "/resources/css/mktree.css" />" type="text/css">
   </head>
   <body>
+  <!-- Delete Comfirm Modal -->
+		<div id="delete-dialog" class="modal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<a href="#" data-dismiss="modal" aria-hidden="true" class="close">×</a>
+						<h3>Are you sure</h3>
+					</div>
+					<div class="modal-body">
+						<p>Do you want to delete this transaction?</p>
+					</div>
+					<div class="modal-footer">
+						<a href="#"  id="btnConfirm" class="btn confirm">OK</a>
+						<a href="#" data-dismiss="modal" aria-hidden="true" class="btn secondary">Cancel</a>
+					</div>
+				</div>
+			</div>
+		</div>
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -252,12 +275,10 @@ pageEncoding="ISO-8859-1"%>
 <span class="icon-bar"></span>
 <span class="icon-bar"></span>
 </button>
-<a class="navbar-brand" href="#">DCI Report</a>
+<a class="navbar-brand" href="#">DCI Report</a> 
 </div>
 <div class="navbar-collapse collapse">
-<form class="navbar-form navbar-right">
-<input type="text" class="form-control" placeholder="Search...">
-</form>
+ <p class="navbar-text navbar-right">${username} <a href="/report/login?logout=logout" class="navbar-link">Log out</a></p> 
 </div>
 </div>
 </div>
@@ -331,7 +352,7 @@ Generate New Report <span class="caret"></span>
       <a  href="/report/uitest3?transactionID=${transaction.id}" class="btn btn-default btn-xs" role="button">Generate </a>
     </td>
     <td>
-      <a  href="/report/delete?transactionID=${transaction.id}" class="btn btn-danger btn-xs" role="button">delete</a>
+      <a  data-target="#delete-dialog" class="btn btn-danger btn-xs deletedialog" role="button" data-toggle="modal" id="/report/delete?transactionID=${transaction.id}" >delete</a>
     </td>
   </tr>
   </c:forEach>

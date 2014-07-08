@@ -25,7 +25,7 @@ import com.dci.report.services.Reportdataservice;
 import com.dci.report.services.Reporthandleservice;
 
 @Controller
-@SessionAttributes(value = { "transaction", "userid" })
+@SessionAttributes(value = { "transaction", "userid", "username" })
 public class HomeController {
 
 	@Autowired
@@ -47,7 +47,8 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/uitest", method = RequestMethod.GET)
-	public ModelAndView initFormLayout(Model model) {
+	public ModelAndView initFormLayout(ModelMap model) {
+		String username = (String) model.get("username");
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
 		List<Client> clientList = (reporthandleservice.getClientMap());
@@ -56,6 +57,7 @@ public class HomeController {
 		modelandview.addObject("reportTypeList", reportTypeList);
 		modelandview.addObject("clientlist", clientList);
 		modelandview.addObject("transactionList", transactionList);
+		modelandview.addObject("username", username);
 		return modelandview;
 	}
 
