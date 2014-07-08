@@ -64,9 +64,11 @@
 
 	<bean id="Genbillingsummary" class="com.dci.report.impl.Genbillingsummary">
 		<property name="dataSource" ref="dataSource" />
+		<property name="path" value="c:\\Temp\\"></property>
 	</bean>
 	
-		<bean id="Genbillingdetail" class="com.dci.report.impl.Genbillingdetail">
+	<bean id="Genbillingdetail" class="com.dci.report.impl.Genbillingdetail">
 		<property name="dataSource" ref="dataSource" />
+		<property name="path" value="C:\\Temp\\"></property>
 	</bean>
 </beans>

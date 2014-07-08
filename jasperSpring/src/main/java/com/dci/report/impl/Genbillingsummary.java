@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -30,12 +31,19 @@ import com.dci.report.services.Reportgenerateservice;
 @SuppressWarnings("deprecation")
 public class Genbillingsummary implements Reportgenerateservice {
 	private DataSource dataSource;
+	private String path;
+	
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 
 	@Override
 	public String generatereport(Transaction transaction) {
-		System.out.println(transaction.getPara().get(0).getValue().toString());
-		System.out.println("In generatereport!");
-		String jasperFilelocation = "C:\\Users\\xqi\\eclipesworkspace\\jasperSpring\\summary1.jasper";
+		String jasperFilelocation = path + "\\Template\\summary.jasper";
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date startdate = null;
 		Date enddate = null;
@@ -94,18 +102,19 @@ public class Genbillingsummary implements Reportgenerateservice {
 
 		JRResultSetDataSource ds = new JRResultSetDataSource(resultSet);
 		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("logoimage", path + "\\Template\\dci.png");
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
-					jasperFilelocation, new HashMap<String, Object>(), ds);
+					jasperFilelocation, parameters, ds);
 			addPropertiesToJasperPrintForExcel(jasperPrint);
-			System.out.println(arroutput.size());
 			for (int i = 0; i < arroutput.size(); i++) {
 				switch (arroutput.get(i).getOutputid()) {
 				case 1:
-					createXlsReport(jasperPrint, arroutput.get(i));
+					createXlsReport(jasperPrint, arroutput.get(i), path);
 					break;
 				case 2:
-					createXlsxReport(jasperPrint, arroutput.get(i));
-					createPdfReport(jasperPrint, arroutput.get(i));
+					createXlsxReport(jasperPrint, arroutput.get(i), path);
+					createPdfReport(jasperPrint, arroutput.get(i), path);
 					break;
 				}
 			}
@@ -116,9 +125,9 @@ public class Genbillingsummary implements Reportgenerateservice {
 		return null;
 	}
 
-	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output) {
+	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output, String path) {
 		String outputname = output.getFilename();
-		String destination = "C:\\Users\\xqi\\Desktop\\" + outputname + ".pdf";
+		String destination = path + "\\Billingsummary\\" + outputname + ".pdf";
 		try {
 			JasperExportManager.exportReportToPdfFile(jasperPrint, destination);
 		} catch (JRException e) {
@@ -128,9 +137,9 @@ public class Genbillingsummary implements Reportgenerateservice {
 
 	}
 
-	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output) {
+	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output, String path) {
 		String outputname = output.getFilename();
-		String destination = "C:\\Users\\xqi\\Desktop\\" + outputname + ".xlsx";
+		String destination = path + "\\Billingsummary\\" + outputname + ".xlsx";
 		try {
 			JRXlsxExporter xlsxexporter = new JRXlsxExporter();
 			xlsxexporter.setParameter(JRExporterParameter.JASPER_PRINT,
@@ -144,9 +153,9 @@ public class Genbillingsummary implements Reportgenerateservice {
 		}
 	}
 
-	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output) {
+	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output, String path) {
 		String outputname = output.getFilename();
-		String destination = "C:\\Users\\xqi\\Desktop\\" + outputname + ".xls";
+		String destination = path + "\\Billingsummary\\" + outputname + ".xls";
 		try {
 			JRXlsExporter exporter = new JRXlsExporter();
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);

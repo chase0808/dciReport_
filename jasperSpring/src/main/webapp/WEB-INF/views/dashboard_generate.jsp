@@ -247,7 +247,7 @@ pageEncoding="ISO-8859-1"%>
                   <td>
                     <div class="btn-group">
                       <c:forEach var = "output" items = "${transaction.arroutput}">
-                    <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
+                    <a href="file:///C:/Users/ldong/Desktop/${output.filename}.${output.type}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
                     </c:forEach>
                   </div>
                 </td>

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,7 +80,6 @@ public class HomeController {
 		Transaction transaction = new Transaction(
 				(ArrayList<Reportpara>) reportpara);
 		transaction.setReportid(reportID);
-		System.out.println("ID: " + transaction.getReportid());
 		ModelAndView modelandview = new ModelAndView("dashboard_generate",
 				"command", transaction);
 		modelandview.addObject("clientlist", clientList);
@@ -219,52 +220,9 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String test(ModelMap model) {
-		//int userid = (Integer) model.get("userid");
-		//System.out.println(userid);
-		// Transaction test = new Transaction();
-		// test.setUserid(2);
-		// test.setReportid(1);
-		// ArrayList<Reportpara> arrpara = new ArrayList<Reportpara>();
-		// for( int i = 0; i < 3; i++ ) {
-		// Reportpara temp = new Reportpara();
-		// temp.setId(i);
-		// ArrayList<String> temp1 = new ArrayList<String>();
-		// temp1.add("Leo");
-		// temp.setValue(temp1);
-		// arrpara.add(temp);
-		// }
-		// Reportpara temp = new Reportpara();
-		// temp.setId(4);
-		// ArrayList<String> temp1 = new ArrayList<String>();
-		// temp1.add("Leo");
-		// temp1.add("Bi");
-		// temp.setValue(temp1);
-		// arrpara.add(temp);
-		// test.setPara(arrpara);
-		// ArrayList<Integer> temp2 = new ArrayList<Integer>();
-		// temp2.add(1);
-		// temp2.add(2);
-		// test.setOutput(temp2);
-		// reportdataservice.create(test);
-		
-		Transaction tt = reportdataservice.getTransaction(38);
-		System.out.println(tt.getPara().size());
-		for( int i = 0; i < tt.getPara().size(); i++ ) {
-			System.out.print(tt.getPara().get(i).getValue());
-		}
-
-		ArrayList<Transaction> t = (ArrayList<Transaction>) reportdataservice
-				.listTransaction();
-		System.out.println("Successful!");
-		System.out.println(t.get(0).getDate().toString());
-		System.out.println(t.get(0).getId());
-		System.out.println(t.get(0).getPara().get(2).getValue().get(0));
-		System.out.println(t.get(0).getPara().get(2).getValue().get(1));
-		System.out.println(t.get(0).getArroutput().get(0).getFilename());
-		//reportdataservice.delete(10);
-		System.out.println("Successful");
-		model.addAttribute("transaction", t.get(0));
+	public String test(ModelMap model, HttpServletRequest request) {
+		String path = request.getSession().getServletContext().getRealPath("/");
+		System.out.println(path);
 		return "redirect:login";
 
 	}
@@ -276,12 +234,7 @@ public class HomeController {
 		transaction.setUserid(userid);
 		reportdataservice.create(transaction);
 		int tid = reportdataservice.getMaxTid();
-		System.out.println("In generate para size"
-				+ transaction.getPara().get(2).getValue().size());
 		Transaction t1 = reportdataservice.getTransaction(tid);
-		System.out.println("In generate para size"
-				+ t1.getPara().get(2).getValue().size());
-		System.out.println("reportID:" + transaction.getReportid());
 		model.addAttribute("transaction", t1);
 		String genMethod = t1.getGenMethod();
 

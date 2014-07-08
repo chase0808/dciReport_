@@ -1,5 +1,7 @@
 package com.dci.report.loginModule;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,13 @@ public class LoginDaoServiceimpl implements LoginDaoService {
 	@Override
 	public String getUserInfo(String username) {
 		String sql = "select password from jasreport.tuser where username = ?";
-		String password = jdbcTemplateObject.queryForObject(sql, String.class, username);
-		return password;
+		List<String> password = jdbcTemplateObject.queryForList(sql, String.class, username);
+		if( password.size() == 0 ) {
+			System.out.println("null");
+			return null;
+		} else {
+			return password.get(0);
+		}
 	}
 
 	public DataSource getDataSource() {
