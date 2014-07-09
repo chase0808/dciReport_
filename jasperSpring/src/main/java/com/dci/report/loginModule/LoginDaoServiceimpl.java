@@ -16,9 +16,11 @@ public class LoginDaoServiceimpl implements LoginDaoService {
 	@Override
 	public String getUserInfo(String username) {
 		String sql = "select password from jasreport.tuser where username = ?";
+
 		List<String> password = jdbcTemplateObject.queryForList(sql,
 				String.class, username);
 		if (password.size() == 0) {
+
 			return null;
 		} else {
 			return password.get(0);

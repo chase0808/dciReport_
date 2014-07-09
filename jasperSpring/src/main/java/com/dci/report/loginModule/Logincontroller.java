@@ -49,5 +49,6 @@ public class Logincontroller {
 		} else {
 			return "redirect:login?error=invalidate";
 		}
+
 	}
 }

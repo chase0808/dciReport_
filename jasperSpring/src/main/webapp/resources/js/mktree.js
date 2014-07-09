@@ -52,6 +52,7 @@ function collapseTree(treeId) {
 
 // Expands enough nodes to expose an LI with a given ID
 function expandToItem(treeId,itemId) {
+  
   var ul = document.getElementById(treeId);
   if (ul == null) { return false; }
   var ret = expandCollapseList(ul,nodeOpenClass,itemId);

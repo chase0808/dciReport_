@@ -105,6 +105,7 @@ public class Reportdataserviceimpl implements Reportdataservice {
 	public List<Transaction> listTransaction() {
 
 		String SQL = "select a.id, name, description, userid, a.date, reportid, paraid, paravalue, paratype from jasreport.ttransaction a inner join jasreport.ttransactionpara b on a.id = b.transactionid inner join jasreport.treportpara c on b.paraid = c.id inner join jasreport.treport e on a.reportid = e.id ";
+
 		ArrayList<Transaction> transactions = jdbcTemplateObject.query(SQL,
 				new TransactionParaExtractor());
 		SQL = "select * from jasreport.ttransactionoutput a inner join jasreport.toutput b on a.outputid = b.id where transactionid = ?";

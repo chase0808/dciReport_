@@ -30,11 +30,20 @@ import com.dci.report.services.Reportgenerateservice;
 @SuppressWarnings("deprecation")
 public class Genbillingdetail implements Reportgenerateservice {
 	private DataSource dataSource;
+	private String path;
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 
 	@Override
 	public String generatereport(Transaction transaction) {
 
-		String jasperFilelocation = "C:\\Users\\xqi\\eclipesworkspace\\jasperSpring\\billingdetail.jasper";
+		String jasperFilelocation = path + "\\Template\\billingdetail.jasper";
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date startdate = null;
 		Date enddate = null;
@@ -102,11 +111,11 @@ public class Genbillingdetail implements Reportgenerateservice {
 			for (int i = 0; i < arroutput.size(); i++) {
 				switch (arroutput.get(i).getOutputid()) {
 				case 1:
-					createXlsReport(jasperPrint, arroutput.get(i));
+					createXlsReport(jasperPrint, arroutput.get(i), path);
 					break;
 				case 2:
-					createXlsxReport(jasperPrint, arroutput.get(i));
-					createPdfReport(jasperPrint, arroutput.get(i));
+					createXlsxReport(jasperPrint, arroutput.get(i), path);
+					createPdfReport(jasperPrint, arroutput.get(i), path);
 					break;
 				}
 			}
@@ -114,12 +123,13 @@ public class Genbillingdetail implements Reportgenerateservice {
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return path;
 	}
 
-	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output) {
+	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output,
+			String path) {
 		String outputname = output.getFilename();
-		String destination = "C:\\Users\\xqi\\Desktop\\" + outputname + ".pdf";
+		String destination = path + "\\Billingdetail\\" + outputname + ".pdf";
 		try {
 			JasperExportManager.exportReportToPdfFile(jasperPrint, destination);
 		} catch (JRException e) {
@@ -129,9 +139,10 @@ public class Genbillingdetail implements Reportgenerateservice {
 
 	}
 
-	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output) {
+	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output,
+			String path) {
 		String outputname = output.getFilename();
-		String destination = "C:\\Users\\xqi\\Desktop\\" + outputname + ".xlsx";
+		String destination = path + "\\Billingdetail\\" + outputname + ".xlsx";
 		try {
 			JRXlsxExporter xlsxexporter = new JRXlsxExporter();
 			xlsxexporter.setParameter(JRExporterParameter.JASPER_PRINT,
@@ -145,9 +156,10 @@ public class Genbillingdetail implements Reportgenerateservice {
 		}
 	}
 
-	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output) {
+	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output,
+			String path) {
 		String outputname = output.getFilename();
-		String destination = "C:\\Users\\xqi\\Desktop\\" + outputname + ".xls";
+		String destination = path + "\\Billingdetail\\" + outputname + ".xls";
 		try {
 			JRXlsExporter exporter = new JRXlsExporter();
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);

@@ -113,14 +113,15 @@ pageEncoding="ISO-8859-1"%>
                   
                   <form:label for="end_date" path="reportpara.value">End Date</form:label>
                    
-                  <form:input type="date" class="form-control" id="start_date" path="para[${i.index}].value"  />
+                  <form:input type="date" class="form-control" id="end_date" path="para[${i.index}].value"  />
                 </c:if>
+               
                 <c:if test="${parameters.id == '3'}">
                 <div class="container">
                   <div class="row">
                     <div class="col-md-3 panel1">
                       <div class="panel panel-default panel-primary ">
-                        <div class="panel-heading">Select Client</div>
+                        <div class="panel-heading">Select Department</div>
                         <div class="panel-body checkboxes">
                           <ul class="mktree" id="tree1">
                             <c:forEach var="client"  items="${clientlist}" >
@@ -151,7 +152,7 @@ pageEncoding="ISO-8859-1"%>
                     </div>
                     <div class="col-md-3 panel2">
                       <div class="panel panel-default panel-primary">
-                        <div class="panel-heading">Selected Client</div>
+                        <div class="panel-heading">Selected Departmentt</div>
                         <div class="panel-body"  id="selectedClient" >
                           
                         </div>
@@ -162,7 +163,14 @@ pageEncoding="ISO-8859-1"%>
               </div>
               
               </c:if>
-              
+               <c:if test="${parameters.id == '4'}">
+                  
+                 
+                  
+                  <label for="deadline" path="reportpara.value">Deadline</label>
+                   
+                  <input type="date" class="form-control" id="deadline"   />
+                </c:if>
              
               </c:forEach>
               
@@ -268,7 +276,7 @@ pageEncoding="ISO-8859-1"%>
                   <td>
                     <div class="btn-group">
                       <c:forEach var = "output" items = "${transaction.arroutput}">
-                    <a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
+                    <a href="file:///${path}${transaction.name}/${output.filename}.${output.type}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
                     </c:forEach>
                   </div>
                 </td>
