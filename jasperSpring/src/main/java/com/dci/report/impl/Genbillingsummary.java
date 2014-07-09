@@ -32,7 +32,16 @@ import com.dci.report.services.Reportgenerateservice;
 public class Genbillingsummary implements Reportgenerateservice {
 	private DataSource dataSource;
 	private String path;
+	private String templatepath;
 	
+	public String getTemplatepath() {
+		return templatepath;
+	}
+
+	public void setTemplatepath(String templatepath) {
+		this.templatepath = templatepath;
+	}
+
 	public String getPath() {
 		return path;
 	}
@@ -43,7 +52,7 @@ public class Genbillingsummary implements Reportgenerateservice {
 
 	@Override
 	public String generatereport(Transaction transaction) {
-		String jasperFilelocation = path + "\\Template\\summary.jasper";
+		String jasperFilelocation = templatepath + "summary.jasper";
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date startdate = null;
 		Date enddate = null;
@@ -103,7 +112,7 @@ public class Genbillingsummary implements Reportgenerateservice {
 		JRResultSetDataSource ds = new JRResultSetDataSource(resultSet);
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("logoimage", path + "\\Template\\dci.png");
+			parameters.put("logoimage", templatepath + "dci.png");
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
 					jasperFilelocation, parameters, ds);
 			addPropertiesToJasperPrintForExcel(jasperPrint);

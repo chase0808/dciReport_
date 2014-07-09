@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -31,21 +32,14 @@ import com.dci.report.services.Reportgenerateservice;
 public class Genbillingdetail implements Reportgenerateservice {
 	private DataSource dataSource;
 	private String path;
-	
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
+	private String templatepath;
 
 	@Override
 	public String generatereport(Transaction transaction) {
 		
 		
 
-		String jasperFilelocation = path + "\\Template\\billingdetail.jasper";
+		String jasperFilelocation = templatepath + "billingdetail.jasper";
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date startdate = null;
 		Date enddate = null;
@@ -107,8 +101,10 @@ public class Genbillingdetail implements Reportgenerateservice {
 
 		JRResultSetDataSource ds = new JRResultSetDataSource(resultSet);
 		try {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("logoimage", templatepath + "dci.png");
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
-					jasperFilelocation, new HashMap<String, Object>(), ds);
+					jasperFilelocation, parameters, ds);
 			addPropertiesToJasperPrintForExcel(jasperPrint);
 			for (int i = 0; i < arroutput.size(); i++) {
 				switch (arroutput.get(i).getOutputid()) {
@@ -226,6 +222,21 @@ public class Genbillingdetail implements Reportgenerateservice {
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+	public String getTemplatepath() {
+		return templatepath;
+	}
+
+	public void setTemplatepath(String templatepath) {
+		this.templatepath = templatepath;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }
