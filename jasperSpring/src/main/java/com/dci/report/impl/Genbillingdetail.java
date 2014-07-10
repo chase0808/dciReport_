@@ -32,12 +32,19 @@ import com.dci.report.services.Reportgenerateservice;
 public class Genbillingdetail implements Reportgenerateservice {
 	private DataSource dataSource;
 	private String path;
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	private String templatepath;
 
 	@Override
 	public String generatereport(Transaction transaction) {
-		
-		
 
 		String jasperFilelocation = templatepath + "billingdetail.jasper";
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -121,10 +128,11 @@ public class Genbillingdetail implements Reportgenerateservice {
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return path;
 	}
 
-	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output, String path) {
+	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output,
+			String path) {
 		String outputname = output.getFilename();
 		String destination = path + "\\Billingdetail\\" + outputname + ".pdf";
 		try {
@@ -136,7 +144,8 @@ public class Genbillingdetail implements Reportgenerateservice {
 
 	}
 
-	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output, String path) {
+	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output,
+			String path) {
 		String outputname = output.getFilename();
 		String destination = path + "\\Billingdetail\\" + outputname + ".xlsx";
 		try {
@@ -152,7 +161,8 @@ public class Genbillingdetail implements Reportgenerateservice {
 		}
 	}
 
-	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output, String path) {
+	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output,
+			String path) {
 		String outputname = output.getFilename();
 		String destination = path + "\\Billingdetail\\" + outputname + ".xls";
 		try {
@@ -223,20 +233,13 @@ public class Genbillingdetail implements Reportgenerateservice {
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+
 	public String getTemplatepath() {
 		return templatepath;
 	}
 
 	public void setTemplatepath(String templatepath) {
 		this.templatepath = templatepath;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
 	}
 
 }

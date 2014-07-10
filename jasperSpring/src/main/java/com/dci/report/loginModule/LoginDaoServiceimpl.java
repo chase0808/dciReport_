@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class LoginDaoServiceimpl implements LoginDaoService {
-	
+
 	@Autowired
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplateObject;
@@ -16,9 +16,11 @@ public class LoginDaoServiceimpl implements LoginDaoService {
 	@Override
 	public String getUserInfo(String username) {
 		String sql = "select password from jasreport.tuser where username = ?";
-		List<String> password = jdbcTemplateObject.queryForList(sql, String.class, username);
-		if( password.size() == 0 ) {
-			System.out.println("null");
+
+		List<String> password = jdbcTemplateObject.queryForList(sql,
+				String.class, username);
+		if (password.size() == 0) {
+
 			return null;
 		} else {
 			return password.get(0);

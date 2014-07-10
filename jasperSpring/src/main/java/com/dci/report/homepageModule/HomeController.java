@@ -18,8 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dci.report.bean.Client;
 import com.dci.report.bean.Department;
-import com.dci.report.bean.FormLayout;
-import com.dci.report.bean.Report;
 import com.dci.report.bean.Reportoutput;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
@@ -27,9 +25,12 @@ import com.dci.report.services.Reportdataservice;
 import com.dci.report.services.Reporthandleservice;
 
 @Controller
-@SessionAttributes(value = { "transaction", "userid" })
+@SessionAttributes(value = { "transaction", "userid", "username" })
 public class HomeController {
-	
+
+	@Autowired
+	private String path;
+
 	@Autowired
 	Reportdataservice reportdataservice;
 
@@ -37,19 +38,41 @@ public class HomeController {
 	Reporthandleservice reporthandleservice;
 
 	@RequestMapping(value = "/homepage", method = RequestMethod.GET)
-	public ModelAndView homepage(Model model) {
-		// ArrayList<Report> listreport = (ArrayList<Report>)
-		// reportdataservice.listReport();
+	public ModelAndView homepage(
+			@RequestParam(value = "reportTypeName", required = false) String reportTypename,
+			@RequestParam(value = "transactionID", required = false) Integer transactionID,
+			ModelMap model) {
+		// Get a list of all clients
 		List<Client> clientList = (reporthandleservice.getClientMap());
-		ModelAndView modelandview = new ModelAndView("dashboard", "command",
-				new Report());
-		// modelandview.addObject("listreport", listreport);
+		// Get a list of all transactions to populate the history table
+		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
+				.listTransaction();
+		// Get a list of all reportTypes to populate the dropdown list
+		List<String> reportTypeList = reportdataservice.listReportType();
+		ModelAndView modelandview = new ModelAndView("homepage");
+		// Get username in the session
+		String username = (String) model.get("username");
+		modelandview.addObject("username", username);
+		// add defaul path to view
+		modelandview.addObject("path", path);
 		modelandview.addObject("clientlist", clientList);
+		modelandview.addObject("transactionList", transactionList);
+		modelandview.addObject("reportTypeList", reportTypeList);
+
+		if (reportTypename != null) {
+			// change modal here
+		}
+
+		if (transactionID != null) {
+			// change modal and auto fill the request form
+		}
+
 		return modelandview;
 	}
 
 	@RequestMapping(value = "/uitest", method = RequestMethod.GET)
-	public ModelAndView initFormLayout(Model model) {
+	public ModelAndView initFormLayout(ModelMap model) {
+		String username = (String) model.get("username");
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
 		List<Client> clientList = (reporthandleservice.getClientMap());
@@ -58,12 +81,16 @@ public class HomeController {
 		modelandview.addObject("reportTypeList", reportTypeList);
 		modelandview.addObject("clientlist", clientList);
 		modelandview.addObject("transactionList", transactionList);
+		modelandview.addObject("username", username);
+		modelandview.addObject("path", path);
 		return modelandview;
 	}
 
 	@RequestMapping(value = "/uitest2", method = RequestMethod.GET)
 	public ModelAndView homepageWithPopup(
-			@RequestParam("reportTypeName") String reportTypename, Model model) {
+			@RequestParam("reportTypeName") String reportTypename,
+			ModelMap model) {
+		String username = (String) model.get("username");
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
 		List<Client> clientList = (reporthandleservice.getClientMap());
@@ -76,7 +103,7 @@ public class HomeController {
 
 		List<Integer> outputIDs = reportToOutputID.get(reportTypename);
 		List<Reportpara> reportpara = reportToPara.get(reportTypename);
-
+		System.out.println(reportpara.size());
 		Transaction transaction = new Transaction(
 				(ArrayList<Reportpara>) reportpara);
 		transaction.setReportid(reportID);
@@ -86,13 +113,16 @@ public class HomeController {
 		modelandview.addObject("reportTypeList", reportTypeList);
 		modelandview.addObject("transactionList", transactionList);
 		modelandview.addObject("outputIDs", outputIDs);
+		modelandview.addObject("username", username);
+		modelandview.addObject("path", path);
 		return modelandview;
 	}
 
 	@RequestMapping(value = "/uitest3", method = RequestMethod.GET)
 	public ModelAndView homepageWithFilledPopup(
 
-	@RequestParam("transactionID") int transactionID, Model model) {
+	@RequestParam("transactionID") int transactionID, ModelMap model) {
+		String username = (String) model.get("username");
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
 		List<Client> clientList = (reporthandleservice.getClientMap());
@@ -101,14 +131,16 @@ public class HomeController {
 		String reportTypeName = reportdataservice.getTransaction(transactionID)
 				.getName();
 		List<Reportpara> reportpara = reportToPara.get(reportTypeName);
-
 		Transaction transaction = new Transaction(
 				(ArrayList<Reportpara>) reportpara);
+		int reportID = reportdataservice.getReportID(reportTypeName);
+		transaction.setReportid(reportID);
 		ModelAndView modelandview = new ModelAndView("dashboard_regenerate",
 				"command", transaction);
+
 		List<String> reportTypeList = reportdataservice.listReportType();
 		List<Department> selectedDepartment = new ArrayList<Department>();
-		String html = "";
+
 		ArrayList<Reportpara> reportParaValue = reportdataservice
 				.getTransaction(transactionID).getPara();
 		Map<String, List<Integer>> reportToOutputID = reportdataservice
@@ -123,88 +155,40 @@ public class HomeController {
 		}
 		for (Reportpara para : reportParaValue) {
 			int paraID = para.getId();
-			ArrayList<String> paraValues = para.getValue();
-			switch (paraID) {
-			case 1:
-				html += " <label for=\"start_date\">Start Date</label>"
-						+ " <input id=\"start_date\" name=\"startdate\" class=\"form-control\" type=\"date\" value=\""
-						+ paraValues.get(0) + "\"/>";
-				break;
-			case 2:
-				html += " <label for=\"end_date\">End Date</label>"
-						+ " <input id=\"end_date\" name=\"enddate\" class=\"form-control\" type=\"date\" value=\""
-						+ paraValues.get(0) + "\"/>";
-				break;
+			if (paraID == 3) {
 
-			case 3:
-				html += "<div class=\"container\">"
-						+ "<div class=\"row\">"
-						+ "<div class=\"col-md-3 panel1\">"
-						+ "  <div class=\"panel panel-default panel-primary \">"
-						+ "    <div class=\"panel-heading\">Select Client</div>"
-						+ "<div class=\"panel-body checkboxes\">"
-						+ " <ul class=\"mktree\" id=\"tree1\">";
-				int count = 1;
-				for (int i = 0; i < para.getValue().size(); i++) {
-					System.out.println("para value" + para.getValue().get(i));
-				}
 				for (Client client : clientList) {
-					html += "<li>" + client.getClientname();
+
 					for (Department department : client.getDepartments()) {
-						html += "<ul>" + "<li>" + "<label>"
-								+ department.getDepartmentName()
-								+ "<input id=\"para" + count + "\""
-								+ " name=\"para\" type=\"checkbox\" value=\""
-								+ department.getDepartmentID() + "\"";
-						boolean flag = false;
 
 						for (int i = 0; i < para.getValue().size(); i++) {
 							if (Integer.toString(department.getDepartmentID())
 									.equals(para.getValue().get(i))) {
-								flag = true;
 								selectedDepartment.add(department);
 
 							}
 						}
-						if (flag) {
-							html += "checked";
-						}
-						html += "/><input type=\"hidden\" name=\"_para\" value=\"on\"/>"
-								+ "</label>" + "</li>" + "</ul>";
-						count++;
+
 					}
-					html += "</li>";
+
 				}
-				break;
+
 			}
 		}
-		System.out.println("selectedDepartment size:"
-				+ selectedDepartment.size());
-		FormLayout formlayout = new FormLayout();
-		formlayout.setLayoutHtml(html);
+
 		modelandview.addObject("reportParaValue", reportParaValue);
-		modelandview.addObject("formlayout", formlayout);
+
 		modelandview.addObject("clientlist", clientList);
 		modelandview.addObject("reportTypeList", reportTypeList);
 		modelandview.addObject("transactionList", transactionList);
 		modelandview.addObject("selectedDepartment", selectedDepartment);
 		modelandview.addObject("outputIDs", outputIDs);
 		modelandview.addObject("transactionOuputIDs", transactionOuputIDs);
+		modelandview.addObject("username", username);
+		modelandview.addObject("path", path);
 		return modelandview;
 	}
 
-	// @RequestMapping(value = "/uitest", method = RequestMethod.GET)
-	// @ResponseBody
-	// public Object getParmeter(String ReportId) {
-	//
-	// // query from database
-	// // or List object
-	//
-	// List parameter = new ArrayList();
-	// parameter.add("Date");
-	//
-	// return parameter;
-	// }
 	@RequestMapping(value = "/result", method = RequestMethod.POST)
 	public ModelAndView showTestResult(Transaction transaction, Model model) {
 		System.out.println(transaction.getPara().size());
@@ -221,7 +205,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String test(ModelMap model, HttpServletRequest request) {
-		
+
 		return "redirect:login";
 
 	}

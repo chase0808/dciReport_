@@ -12,7 +12,7 @@ import com.dci.report.impl.Genbillingdetail;
 import com.dci.report.impl.Genbillingsummary;
 
 @Controller
-@SessionAttributes(value = { "transaction" })
+@SessionAttributes(value = { "transaction", "path" })
 public class GenController {
 
 	@Autowired
@@ -24,14 +24,14 @@ public class GenController {
 	@RequestMapping(value = "/genbillingdeital", method = RequestMethod.GET)
 	public String genbillingdetail(ModelMap model) {
 		Transaction transaction = (Transaction) model.get("transaction");
-		genbillingdetail.generatereport(transaction);
+		String path = genbillingdetail.generatereport(transaction);
 		return "redirect:uitest";
 	}
 
 	@RequestMapping(value = "/genbillingsummary", method = RequestMethod.GET)
 	public String genbillingsummary(ModelMap model) {
 		Transaction transaction = (Transaction) model.get("transaction");
-		genbillingsummary.generatereport(transaction);
+		String path = genbillingsummary.generatereport(transaction);
 		return "redirect:uitest";
 	}
 }

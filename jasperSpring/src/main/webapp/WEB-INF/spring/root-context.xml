@@ -74,4 +74,9 @@
 		<property name="templatepath" value="C:\\Temp\\template\\"></property>
 	</bean>
 	
+
+	<bean id="path" class="java.lang.String">
+    <constructor-arg value="C:\\Temp\\"/>
+    </bean>
+
 </beans>

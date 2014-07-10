@@ -32,8 +32,9 @@ import com.dci.report.services.Reportgenerateservice;
 public class Genbillingsummary implements Reportgenerateservice {
 	private DataSource dataSource;
 	private String path;
+
 	private String templatepath;
-	
+
 	public String getTemplatepath() {
 		return templatepath;
 	}
@@ -131,10 +132,11 @@ public class Genbillingsummary implements Reportgenerateservice {
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return path;
 	}
 
-	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output, String path) {
+	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output,
+			String path) {
 		String outputname = output.getFilename();
 		String destination = path + "\\Billingsummary\\" + outputname + ".pdf";
 		try {
@@ -146,7 +148,8 @@ public class Genbillingsummary implements Reportgenerateservice {
 
 	}
 
-	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output, String path) {
+	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output,
+			String path) {
 		String outputname = output.getFilename();
 		String destination = path + "\\Billingsummary\\" + outputname + ".xlsx";
 		try {
@@ -162,7 +165,8 @@ public class Genbillingsummary implements Reportgenerateservice {
 		}
 	}
 
-	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output, String path) {
+	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output,
+			String path) {
 		String outputname = output.getFilename();
 		String destination = path + "\\Billingsummary\\" + outputname + ".xls";
 		try {
