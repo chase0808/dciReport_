@@ -27,6 +27,7 @@ import com.dci.report.services.Reporthandleservice;
 @Controller
 @SessionAttributes(value = { "transaction", "userid", "username" })
 public class HomeController {
+
 	@Autowired
 	private String path;
 
@@ -204,8 +205,7 @@ public class HomeController {
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String test(ModelMap model, HttpServletRequest request) {
-		String path = request.getSession().getServletContext().getRealPath("/");
-		System.out.println(path);
+
 		return "redirect:login";
 
 	}
