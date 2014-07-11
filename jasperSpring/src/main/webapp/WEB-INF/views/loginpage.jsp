@@ -39,8 +39,8 @@ pageEncoding="ISO-8859-1"%>
 				</div>
 				</c:if>
 
-				<form:input type="text" class="form-control" placeholder="User Name" path="username" required autofocus />
-					<form:input type="password" class="form-control" placeholder="Password" path="password" required />
+				<form:input type="text"  class="form-control" placeholder="User Name"  path="username"  required = "required" />
+				<form:input type="password"   class="form-control" placeholder="Password"  path="password"  required = "required"/>
 						<label class="checkbox">
 							<input type="checkbox" value="remember-me"> Remember me
 						</label>
