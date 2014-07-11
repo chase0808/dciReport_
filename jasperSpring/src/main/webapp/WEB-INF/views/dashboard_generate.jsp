@@ -105,7 +105,7 @@ pageEncoding="ISO-8859-1"%>
                  
                  <form:label for="start_date" path="reportpara.value">Start Date</form:label>
                   
-                 <form:input type="date" class="form-control" id="start_date" path="para[${i.index}].value"  />
+                 <form:input type="date" class="form-control" id="start_date" path="para[${i.index}].value" required = "required" />
                 </c:if>
                 <c:if test="${parameters.id == '2'}">
                   <form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
@@ -113,7 +113,7 @@ pageEncoding="ISO-8859-1"%>
                   
                   <form:label for="end_date" path="reportpara.value">End Date</form:label>
                    
-                  <form:input type="date" class="form-control" id="end_date" path="para[${i.index}].value"  />
+                  <form:input type="date" class="form-control" id="end_date" path="para[${i.index}].value" required = "required"/>
                 </c:if>
                
                 <c:if test="${parameters.id == '3'}">

@@ -117,14 +117,14 @@ pageEncoding="ISO-8859-1"%>
 					<form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
 					
 					
-					<form:input type="date" class="form-control" id="start_date" path="para[${i.index}].value" value="${parameters.value[0]}" />
+					<form:input type="date" class="form-control" id="start_date" path="para[${i.index}].value" value="${parameters.value[0]}" required = "required"/>
 						</c:if>
 						<c:if test="${parameters.id == '2'}">
 					<form:label for="end_date" path="para[${i.index}].value">End Date</form:label>
 			    	<form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
 				
 				
-				<form:input type="date" class="form-control" id="end_date" path="para[${i.index}].value" value="${parameters.value[0]}"/>
+				<form:input type="date" class="form-control" id="end_date" path="para[${i.index}].value" value="${parameters.value[0]}" required = "required"/>
 					</c:if>
 					 <c:if test="${parameters.id == '4'}">
                   
