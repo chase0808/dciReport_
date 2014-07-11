@@ -12,7 +12,7 @@ pageEncoding="ISO-8859-1"%>
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-		<title>Dashboard Template for Bootstrap</title>
+		<title>DCI Report Dashboard</title>
 		<!-- Bootstrap core CSS -->
 		<link href="<c:url value = "/resources/bootstrap/css/bootstrap.min.css" />"  rel="stylesheet">
 		<!-- Custom styles for this template -->
@@ -76,7 +76,40 @@ pageEncoding="ISO-8859-1"%>
 		});
 		});
 		</script>
+		<script>
+		function validate(){
+			var allVals = [];
+			var outputVals = [];
+			$("input[type='checkbox'][id!='_output']").each(function(){
+				if(this.checked){
+					allVals.push($(this).val());
+				}
+			});
+			
+			$("input[type='checkbox'][id ='_output']").each(function(){
+			    
+				if(this.checked){
+					outputVals.push($(this).val());
+				}
+			});
+			
+			if (allVals.length==0) {
+				alert("Please select at least one department!");
+				return false;
+			}
+			if(outputVals.length==0){
+				alert("Please select at least one output type!");
+				return false;
+			}
 		
+		
+			if (allVals.length==0) {
+				alert("Please select department!");
+				return false;
+			}
+			return true;
+		}
+		</script>
 		<link rel="stylesheet" href="<c:url value = "/resources/css/mktree.css" />" type="text/css">
 	</head>
 	<body>
@@ -107,7 +140,7 @@ pageEncoding="ISO-8859-1"%>
 						<h4 class="modal-title" id="myModalLabel">Criteria</h4>
 					</div>
 					<div class="modal-body ">
-						<form:form role="form" method="POST"  action="/report/generate" >
+						<form:form role="form" method="POST"  action="/report/generate" onsubmit="return validate();">
 						<form:hidden path="reportid" value="${command.reportid}"></form:hidden>
 						<div class="form-group">
 							<c:forEach var="parameters"  items="${reportParaValue}" varStatus="i">
