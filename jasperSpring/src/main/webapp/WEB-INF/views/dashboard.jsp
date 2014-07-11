@@ -13,7 +13,7 @@ pageEncoding="ISO-8859-1"%>
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-		<title>Dashboard Template for Bootstrap</title>
+		<title>DCI Report Dashboard</title>
 		<!-- Bootstrap core CSS -->
 		<link href="<c:url value = "/resources/bootstrap/css/bootstrap.min.css" />"  rel="stylesheet">
 		<!-- Custom styles for this template -->
