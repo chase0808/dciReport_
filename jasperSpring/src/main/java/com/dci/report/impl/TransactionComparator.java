@@ -10,7 +10,7 @@ public class TransactionComparator implements Comparator<Transaction> {
 	public int compare(Transaction t1, Transaction t2) {
 		int tid1 = t1.getId();
 		int tid2 = t2.getId();
-		return tid1 - tid2;
+		return tid2 - tid1;
 	}
 
 }

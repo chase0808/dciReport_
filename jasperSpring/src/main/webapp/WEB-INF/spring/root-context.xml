@@ -66,12 +66,14 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="path" value="c:\\Temp\\"></property>
 		<property name="templatepath" value="C:\\Temp\\template\\"></property>
+		<property name="reportdataservice" ref="reportdataservice"/>
 	</bean>
 	
 	<bean id="Genbillingdetail" class="com.dci.report.impl.Genbillingdetail">
 		<property name="dataSource" ref="dataSource" />
 		<property name="path" value="C:\\Temp\\"></property>
 		<property name="templatepath" value="C:\\Temp\\template\\"></property>
+		<property name="reportdataservice" ref="reportdataservice"/>
 	</bean>
 	
 

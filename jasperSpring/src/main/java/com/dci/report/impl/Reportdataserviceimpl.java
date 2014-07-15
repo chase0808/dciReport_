@@ -180,5 +180,11 @@ public class Reportdataserviceimpl implements Reportdataservice {
 		int tid = jdbcTemplateObject.queryForInt(sql);
 		return tid;
 	}
+	
+	public void updateStatus(int transactionid) {
+		String status = "Done";
+		String sql = "update jasreport.ttransactionoutput set status = ? where transactionid = ?";
+		int result =jdbcTemplateObject.update(sql,status, transactionid);
+	}
 
 }

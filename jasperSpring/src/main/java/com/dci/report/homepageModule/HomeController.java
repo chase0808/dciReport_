@@ -96,6 +96,7 @@ public class HomeController {
 		String username = (String) model.get("username");
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
+		Collections.sort(transactionList, new TransactionComparator());
 		List<Client> clientList = (reporthandleservice.getClientMap());
 		List<String> reportTypeList = reportdataservice.listReportType();
 		Map<String, List<Reportpara>> reportToPara = reportdataservice
@@ -128,6 +129,7 @@ public class HomeController {
 		String username = (String) model.get("username");
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
+		Collections.sort(transactionList, new TransactionComparator());
 		List<Client> clientList = (reporthandleservice.getClientMap());
 		Map<String, List<Reportpara>> reportToPara = reportdataservice
 				.reportParaMap();
@@ -223,6 +225,7 @@ public class HomeController {
 		Transaction t1 = reportdataservice.getTransaction(tid);
 		model.addAttribute("transaction", t1);
 		String genMethod = t1.getGenMethod();
+		System.out.println(t1.getId());
 
 		String output = "redirect:" + genMethod;
 		return output;
