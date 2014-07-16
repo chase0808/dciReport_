@@ -1,6 +1,7 @@
 package com.dci.report.homepageModule;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import com.dci.report.bean.Department;
 import com.dci.report.bean.Reportoutput;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
+import com.dci.report.impl.TransactionComparator;
 import com.dci.report.services.Reportdataservice;
 import com.dci.report.services.Reporthandleservice;
 
@@ -141,6 +143,7 @@ public class HomeController {
 		String username = (String) model.get("username");
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
+		Collections.sort(transactionList, new TransactionComparator());
 		List<Client> clientList = (reporthandleservice.getClientMap());
 		ModelAndView modelandview = new ModelAndView("dashboard");
 		List<String> reportTypeList = reportdataservice.listReportType();
@@ -159,6 +162,7 @@ public class HomeController {
 		String username = (String) model.get("username");
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
+		Collections.sort(transactionList, new TransactionComparator());
 		List<Client> clientList = (reporthandleservice.getClientMap());
 		List<String> reportTypeList = reportdataservice.listReportType();
 		Map<String, List<Reportpara>> reportToPara = reportdataservice
@@ -192,6 +196,7 @@ public class HomeController {
 		String username = (String) model.get("username");
 		ArrayList<Transaction> transactionList = (ArrayList<Transaction>) reportdataservice
 				.listTransaction();
+		Collections.sort(transactionList, new TransactionComparator());
 		List<Client> clientList = (reporthandleservice.getClientMap());
 		Map<String, List<Reportpara>> reportToPara = reportdataservice
 				.reportParaMap();
@@ -288,6 +293,7 @@ public class HomeController {
 		Transaction t1 = reportdataservice.getTransaction(tid);
 		model.addAttribute("transaction", t1);
 		String genMethod = t1.getGenMethod();
+		System.out.println(t1.getId());
 
 		String output = "redirect:" + genMethod;
 		return output;

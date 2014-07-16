@@ -13,6 +13,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JRResultSetDataSource;
@@ -26,10 +28,13 @@ import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import com.dci.report.bean.Reportoutput;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
+import com.dci.report.services.Reportdataservice;
 import com.dci.report.services.Reportgenerateservice;
 
 @SuppressWarnings("deprecation")
 public class Genbillingsummary implements Reportgenerateservice {
+
+	Reportdataservice reportdataservice;
 	private DataSource dataSource;
 	private String path;
 
@@ -53,6 +58,7 @@ public class Genbillingsummary implements Reportgenerateservice {
 
 	@Override
 	public String generatereport(Transaction transaction) {
+		int tid =  transaction.getId();
 		String jasperFilelocation = templatepath + "summary.jasper";
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date startdate = null;
@@ -120,11 +126,13 @@ public class Genbillingsummary implements Reportgenerateservice {
 			for (int i = 0; i < arroutput.size(); i++) {
 				switch (arroutput.get(i).getOutputid()) {
 				case 1:
-					createXlsReport(jasperPrint, arroutput.get(i), path);
+					createPdfReport(jasperPrint, arroutput.get(i), path);
+					reportdataservice.updateStatus(tid);
 					break;
 				case 2:
 					createXlsxReport(jasperPrint, arroutput.get(i), path);
-					createPdfReport(jasperPrint, arroutput.get(i), path);
+					createXlsReport(jasperPrint, arroutput.get(i), path);
+					reportdataservice.updateStatus(tid);
 					break;
 				}
 			}
@@ -237,5 +245,12 @@ public class Genbillingsummary implements Reportgenerateservice {
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+	
+	public Reportdataservice getReportdataservice() {
+		return reportdataservice;
+	}
 
+	public void setReportdataservice(Reportdataservice reportdataservice) {
+		this.reportdataservice = reportdataservice;
+	}
 }

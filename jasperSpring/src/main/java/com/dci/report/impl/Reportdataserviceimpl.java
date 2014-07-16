@@ -104,7 +104,7 @@ public class Reportdataserviceimpl implements Reportdataservice {
 	@Override
 	public List<Transaction> listTransaction() {
 
-		String SQL = "select a.id, name, description, userid, a.date, reportid, paraid, paravalue, paratype from jasreport.ttransaction a inner join jasreport.ttransactionpara b on a.id = b.transactionid inner join jasreport.treportpara c on b.paraid = c.id inner join jasreport.treport e on a.reportid = e.id ";
+		String SQL = "select a.id, name, description, userid, a.date, reportid, paraid, paravalue, paratype from jasreport.ttransaction a inner join jasreport.ttransactionpara b on a.id = b.transactionid inner join jasreport.treportpara c on b.paraid = c.id inner join jasreport.treport e on a.reportid = e.id order by a.id";
 
 		ArrayList<Transaction> transactions = jdbcTemplateObject.query(SQL,
 				new TransactionParaExtractor());
@@ -179,6 +179,12 @@ public class Reportdataserviceimpl implements Reportdataservice {
 		String sql = "select max(id) from jasreport.ttransaction";
 		int tid = jdbcTemplateObject.queryForInt(sql);
 		return tid;
+	}
+	
+	public void updateStatus(int transactionid) {
+		String status = "Done";
+		String sql = "update jasreport.ttransactionoutput set status = ? where transactionid = ?";
+		int result =jdbcTemplateObject.update(sql,status, transactionid);
 	}
 
 }

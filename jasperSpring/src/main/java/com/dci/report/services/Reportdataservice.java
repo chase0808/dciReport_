@@ -32,4 +32,6 @@ public interface Reportdataservice {
 	public int getReportID(String reportTypename);
 
 	public int getMaxTid();
+	
+	public void updateStatus(int transactionid);
 }
