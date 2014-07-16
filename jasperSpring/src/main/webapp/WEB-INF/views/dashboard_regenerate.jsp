@@ -17,6 +17,7 @@ pageEncoding="ISO-8859-1"%>
 		<link href="<c:url value = "/resources/bootstrap/css/bootstrap.min.css" />"  rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="<c:url value = "/resources/css/dashboard.css" />" rel="stylesheet">
+		<link href="<c:url value = "/resources/css/simplePagination.css" />" rel="stylesheet">
 		<!-- Just for debugging purposes. Don't actually copy this line! -->
 		<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -24,8 +25,15 @@ pageEncoding="ISO-8859-1"%>
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
+		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 		<script type="text/javascript" src="<c:url value = "/resources/js/mktree.js" />"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript" src="<c:url value = "/resources/js/jquery.simplePagination.js" />"></script>
+		<style type="text/css">
+		.list-of-transactions
+		{
+			min-height: 450px;
+		}
+		</style>
 		<script>
 		var reportname;
 		$(window).load(function(){
@@ -41,6 +49,27 @@ pageEncoding="ISO-8859-1"%>
 		});
 		
 		$(document).ready(function(){
+		
+		var items = $("table tbody tr");
+
+        var numItems = items.length;
+        var perPage = 10;
+        items.slice(perPage).hide();
+        $('#choose').pagination({
+            items: numItems,
+            itemsOnPage: perPage,
+            cssStyle: 'light-theme',
+            onPageClick: function(pageNumber) { // this is where the magic happens
+            // someone changed page, lets hide/show trs appropriately
+            var showFrom = perPage * (pageNumber - 1);
+            var showTo = showFrom + perPage;
+
+            items.hide() // first hide everything, then show for the new page
+                 .slice(showFrom, showTo).show();
+        }
+        });
+        
+        
 		$("input[type='checkbox'][checked = 'true'][id!='_output']").each(function() {
 		//alert($(this).closest("li").attr('id'));
 		expandTree(tree1);
@@ -103,10 +132,7 @@ pageEncoding="ISO-8859-1"%>
 			}
 		
 		
-			if (allVals.length==0) {
-				alert("Please select department!");
-				return false;
-			}
+		
 			return true;
 		}
 		</script>
@@ -137,7 +163,7 @@ pageEncoding="ISO-8859-1"%>
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="myModalLabel">Criteria</h4>
+						<h4 class="modal-title" id="myModalLabel"> ${reportTypeName}  </h4>
 					</div>
 					<div class="modal-body ">
 						<form:form role="form" method="POST"  action="/report/generate" onsubmit="return validate();">
@@ -335,6 +361,7 @@ Generate New Report <span class="caret"></span>
 </ul>
 </div>
 <h2 class="sub-header">Report History</h2>
+<div class="list-of-transactions">
 <div class="table-responsive">
 <table class="table table-striped">
 <thead>
@@ -347,7 +374,7 @@ Generate New Report <span class="caret"></span>
 <th>Delete</th>
 </tr>
 </thead>
-<tbody>
+<tbody >
 <c:forEach var = "transaction" items = "${transactionList}">
 <tr>
 <td>${transaction.name}</td>
@@ -359,10 +386,10 @@ Generate New Report <span class="caret"></span>
 <span class="label label-primary">${output.type} &nbsp; ${output.status}</span>
 </c:when>
 <c:when test = "${output.status == 'Fail'}">
-<span class="label label-danger">${output.type} &nbsp; ${output.status}</span>
+<span class="label label-warning">${output.type} &nbsp; ${output.status}</span>
 </c:when>
 <c:otherwise>
-<span class="label label-warning">${output.type} &nbsp;    ${output.status}</span>
+<span class="label label-success">${output.type} &nbsp;    ${output.status}</span>
 </c:otherwise>
 </c:choose>
 </c:forEach>
@@ -370,7 +397,7 @@ Generate New Report <span class="caret"></span>
 <td>
 <div class="btn-group">
 <c:forEach var = "output" items = "${transaction.arroutput}">
-<a href="file:///${path}${transaction.name}/${output.filename}.${output.type}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
+<a href="file:///${path}${transaction.name}/${output.filename}.${output.type}" class="btn btn-default btn-xs" role="button" target="_blank"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
 </c:forEach>
 </div>
 </td>
@@ -384,6 +411,10 @@ Generate New Report <span class="caret"></span>
 </c:forEach>
 </tbody>
 </table>
+
+</div>
+</div>
+<div id="choose">
 </div>
 </div>
 </div>
@@ -391,7 +422,7 @@ Generate New Report <span class="caret"></span>
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
 <script src="<c:url value = "/resources/bootstrap/js/bootstrap.min.js" />"></script>
 <script src="<c:url value = "/resources/bootstrap/js/docs.min.js" />"></script>
 </body>
