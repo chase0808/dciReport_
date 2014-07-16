@@ -58,13 +58,79 @@ public class HomeController {
 		modelandview.addObject("clientlist", clientList);
 		modelandview.addObject("transactionList", transactionList);
 		modelandview.addObject("reportTypeList", reportTypeList);
+		Transaction transaction = new Transaction();
+		modelandview.addObject("command", transaction);
 
 		if (reportTypename != null) {
+			Map<String, List<Reportpara>> reportToPara = reportdataservice
+					.reportParaMap();
+			Map<String, List<Integer>> reportToOutputID = reportdataservice
+					.reportOutputIDMap();
+			int reportID = reportdataservice.getReportID(reportTypename);
+
+			List<Integer> outputIDs = reportToOutputID.get(reportTypename);
+			List<Reportpara> reportpara = reportToPara.get(reportTypename);
+			System.out.println(reportpara.size());
+			transaction.setPara((ArrayList<Reportpara>) reportpara);
+			transaction.setReportid(reportID);
 			// change modal here
+
+			modelandview.addObject("outputIDs", outputIDs);
 		}
 
 		if (transactionID != null) {
 			// change modal and auto fill the request form
+			Map<String, List<Reportpara>> reportToPara = reportdataservice
+					.reportParaMap();
+			String reportTypeName = reportdataservice.getTransaction(
+					transactionID).getName();
+			List<Reportpara> reportpara = reportToPara.get(reportTypeName);
+			transaction.setPara((ArrayList<Reportpara>) reportpara);
+			int reportID = reportdataservice.getReportID(reportTypeName);
+			transaction.setReportid(reportID);
+			List<Department> selectedDepartment = new ArrayList<Department>();
+
+			ArrayList<Reportpara> reportParaValue = reportdataservice
+					.getTransaction(transactionID).getPara();
+			Map<String, List<Integer>> reportToOutputID = reportdataservice
+					.reportOutputIDMap();
+			List<Integer> outputIDs = reportToOutputID.get(reportdataservice
+					.getTransaction(transactionID).getName());
+			List<Integer> transactionOuputIDs = new ArrayList<Integer>();
+			List<Reportoutput> transactionOutput = reportdataservice
+					.getTransaction(transactionID).getArroutput();
+			for (Reportoutput reportoutput : transactionOutput) {
+				transactionOuputIDs.add(reportoutput.getOutputid());
+			}
+			for (Reportpara para : reportParaValue) {
+				int paraID = para.getId();
+				if (paraID == 3) {
+
+					for (Client client : clientList) {
+
+						for (Department department : client.getDepartments()) {
+
+							for (int i = 0; i < para.getValue().size(); i++) {
+								if (Integer.toString(
+										department.getDepartmentID()).equals(
+										para.getValue().get(i))) {
+									selectedDepartment.add(department);
+
+								}
+							}
+
+						}
+
+					}
+
+				}
+			}
+
+			modelandview.addObject("reportParaValue", reportParaValue);
+			modelandview.addObject("selectedDepartment", selectedDepartment);
+			modelandview.addObject("outputIDs", outputIDs);
+			modelandview.addObject("transactionOuputIDs", transactionOuputIDs);
+			modelandview.addObject("command", transaction);
 		}
 
 		return modelandview;

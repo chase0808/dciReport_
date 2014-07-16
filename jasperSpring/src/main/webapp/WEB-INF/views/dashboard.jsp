@@ -18,18 +18,56 @@ pageEncoding="ISO-8859-1"%>
 		<link href="<c:url value = "/resources/bootstrap/css/bootstrap.min.css" />"  rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="<c:url value = "/resources/css/dashboard.css" />" rel="stylesheet">
+		<link href="<c:url value = "/resources/css/simplePagination.css" />" rel="stylesheet">
 		<!-- Just for debugging purposes. Don't actually copy this line! -->
 		<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script> 
 		<![endif]-->
+		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 		<script type="text/javascript" src="<c:url value = "/resources/js/mktree.js" />"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript" src="<c:url value = "/resources/js/jquery.simplePagination.js" />"></script>
+		
+		
+         <script src="<c:url value = "/resources/bootstrap/js/bootstrap.min.js" />"></script>
+         <script src="<c:url value = "/resources/bootstrap/js/docs.min.js" />"></script>
+		<style type="text/css">
+		.list-of-transactions
+		{
+			min-height: 450px;
+		}
+		.custom
+		{
+			width: 100px;
+		}
+		</style>
 		<script>
-		var reportname;
+		
 		$(document).ready(function(){
+		var items = $("table tbody tr");
+
+        var numItems = items.length;
+        var perPage = 10;
+        items.slice(perPage).hide();
+        $('#choose').pagination({
+            items: numItems,
+            itemsOnPage: perPage,
+            cssStyle: 'light-theme',
+            onPageClick: function(pageNumber) { // this is where the magic happens
+            // someone changed page, lets hide/show trs appropriately
+            var showFrom = perPage * (pageNumber - 1);
+            var showTo = showFrom + perPage;
+
+            items.hide() // first hide everything, then show for the new page
+                 .slice(showFrom, showTo).show();
+        }
+        });
+
+        
+    	
+		
 		$(".deletedialog").click(function(){
 			var hrefvalue = $(this).attr('id');
 			$("#btnConfirm").attr('href', hrefvalue);
@@ -54,9 +92,7 @@ pageEncoding="ISO-8859-1"%>
 		});
 		});
 		</script>
-		<script id = "forEach">
 		
-		</script>
 		<link rel="stylesheet" href="<c:url value = "/resources/css/mktree.css" />" type="text/css">
 	</head>
 	<body>
@@ -121,16 +157,16 @@ pageEncoding="ISO-8859-1"%>
 					
 					
 					<h2 class="sub-header">Report History</h2>
+					<div class="list-of-transactions">
 					<div class="table-responsive">
-						<table class="table table-striped">
+						<table class="table table-striped ">
 							<thead>
 								<tr>
 									<th>Report Name</th>
 									<th>Timestamp</th>
 									<th>Status</th>
 									<th>Review</th>
-									<th>Generate</th>
-									
+									<th>Generate</th>							
 									<th>Delete</th>
 								</tr>
 							</thead>
@@ -143,13 +179,13 @@ pageEncoding="ISO-8859-1"%>
 										<c:forEach var = "output" items = "${transaction.arroutput}">
 										<c:choose>
 										<c:when test = "${output.status == 'In progress'}">
-										<span class="label label-primary">${output.type} &nbsp; ${output.status}</span>
+										<span class="label label-primary custom">${output.type} &nbsp; ${output.status}</span>
 										</c:when>
 										<c:when test = "${output.status == 'Fail'}">
-										<span class="label label-danger">${output.type} &nbsp; ${output.status}</span>
+										<span class="label label-warning custom">${output.type} &nbsp; ${output.status}</span>
 										</c:when>
 										<c:otherwise>
-										<span class="label label-warning">${output.type} &nbsp; 	 ${output.status}</span>
+										<span class="label label-success custom">${output.type} &nbsp; 	 ${output.status}</span>
 										</c:otherwise>
 										</c:choose>
 										</c:forEach>
@@ -172,16 +208,22 @@ pageEncoding="ISO-8859-1"%>
 							
 						</tbody>
 					</table>
+					
 				</div>
+				
+			</div>
+			     
+    		<div id="choose">      
+   
+    		</div> 
+			
+			
 			</div>
 		</div>
 	</div>
-	<!-- Bootstrap core JavaScript
-	================================================== -->
-	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="<c:url value = "/resources/bootstrap/js/bootstrap.min.js" />"></script>
-	<script src="<c:url value = "/resources/bootstrap/js/docs.min.js" />"></script>
+
+
+	
 
 </body>
 </html>
