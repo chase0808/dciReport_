@@ -176,6 +176,7 @@ public class HomeController {
 		ModelAndView modelandview = new ModelAndView("dashboard_generate",
 				"command", transaction);
 		modelandview.addObject("clientlist", clientList);
+		modelandview.addObject("reportTypename", reportTypename);
 		modelandview.addObject("reportTypeList", reportTypeList);
 		modelandview.addObject("transactionList", transactionList);
 		modelandview.addObject("outputIDs", outputIDs);
@@ -245,6 +246,7 @@ public class HomeController {
 		modelandview.addObject("reportParaValue", reportParaValue);
 
 		modelandview.addObject("clientlist", clientList);
+		modelandview.addObject("reportTypeName", reportTypeName);
 		modelandview.addObject("reportTypeList", reportTypeList);
 		modelandview.addObject("transactionList", transactionList);
 		modelandview.addObject("selectedDepartment", selectedDepartment);

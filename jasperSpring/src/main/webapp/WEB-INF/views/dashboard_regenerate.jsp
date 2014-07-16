@@ -163,7 +163,7 @@ pageEncoding="ISO-8859-1"%>
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="myModalLabel">Criteria</h4>
+						<h4 class="modal-title" id="myModalLabel"> ${reportTypeName}  </h4>
 					</div>
 					<div class="modal-body ">
 						<form:form role="form" method="POST"  action="/report/generate" onsubmit="return validate();">
