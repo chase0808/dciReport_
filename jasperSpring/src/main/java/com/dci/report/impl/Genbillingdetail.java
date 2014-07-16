@@ -37,7 +37,7 @@ public class Genbillingdetail implements Reportgenerateservice {
 	Reportdataservice reportdataservice;
 	private DataSource dataSource;
 	private String path;
-
+	private String reportTypeName;
 	public String getPath() {
 		return path;
 	}
@@ -51,6 +51,7 @@ public class Genbillingdetail implements Reportgenerateservice {
 	@Override
 	public String generatereport(Transaction transaction) {
 		int tid = transaction.getId();
+		reportTypeName = reportdataservice.getTransaction(tid).getName();
 		String jasperFilelocation = templatepath + "billingdetail.jasper";
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date startdate = null;
@@ -141,7 +142,7 @@ public class Genbillingdetail implements Reportgenerateservice {
 	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output,
 			String path) {
 		String outputname = output.getFilename();
-		String destination = path + "\\Billingdetail\\" + outputname + ".pdf";
+		String destination = path + "\\" + reportTypeName + "\\" + outputname + ".pdf";
 		try {
 			JasperExportManager.exportReportToPdfFile(jasperPrint, destination);
 		} catch (JRException e) {
@@ -154,7 +155,7 @@ public class Genbillingdetail implements Reportgenerateservice {
 	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output,
 			String path) {
 		String outputname = output.getFilename();
-		String destination = path + "\\Billingdetail\\" + outputname + ".xlsx";
+		String destination = path + "\\" + reportTypeName + "\\" + outputname + ".xlsx";
 		try {
 			JRXlsxExporter xlsxexporter = new JRXlsxExporter();
 			xlsxexporter.setParameter(JRExporterParameter.JASPER_PRINT,
@@ -171,7 +172,7 @@ public class Genbillingdetail implements Reportgenerateservice {
 	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output,
 			String path) {
 		String outputname = output.getFilename();
-		String destination = path + "\\Billingdetail\\" + outputname + ".xls";
+		String destination = path + "\\" + reportTypeName + "\\" + outputname + ".xls";
 		try {
 			JRXlsExporter exporter = new JRXlsExporter();
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
@@ -230,7 +231,6 @@ public class Genbillingdetail implements Reportgenerateservice {
 				.setProperty(
 						"net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1",
 						"columnHeader");
-
 	}
 
 	public DataSource getDataSource() {
