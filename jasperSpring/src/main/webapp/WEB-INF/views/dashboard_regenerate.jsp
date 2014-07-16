@@ -397,7 +397,7 @@ Generate New Report <span class="caret"></span>
 <td>
 <div class="btn-group">
 <c:forEach var = "output" items = "${transaction.arroutput}">
-<a href="file:///${path}${transaction.name}/${output.filename}.${output.type}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
+<a href="file:///${path}${transaction.name}/${output.filename}.${output.type}" class="btn btn-default btn-xs" role="button" target="_blank"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
 </c:forEach>
 </div>
 </td>

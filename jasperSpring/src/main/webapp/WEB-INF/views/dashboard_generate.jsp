@@ -209,7 +209,7 @@ pageEncoding="ISO-8859-1"%>
 					</div>
 					<div class="col-md-3 panel2">
 						<div class="panel panel-default panel-primary">
-							<div class="panel-heading">Selected Departmentt</div>
+							<div class="panel-heading">Selected Department</div>
 							<div class="panel-body"  id="selectedClient" >
 								
 							</div>
@@ -334,7 +334,7 @@ Generate New Report <span class="caret"></span>
 	<td>
 		<div class="btn-group">
 			<c:forEach var = "output" items = "${transaction.arroutput}">
-		<a href="file:///${path}${transaction.name}/${output.filename}.${output.type}" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
+		<a href="file:///${path}${transaction.name}/${output.filename}.${output.type}" class="btn btn-default btn-xs" role="button" target="_blank"><span class="glyphicon glyphicon-search"></span>${output.type}</a >
 		</c:forEach>
 	</div>
 </td>
