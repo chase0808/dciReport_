@@ -320,13 +320,13 @@ Generate New Report <span class="caret"></span>
 		<c:forEach var = "output" items = "${transaction.arroutput}">
 		<c:choose>
 		<c:when test = "${output.status == 'In progress'}">
-		<span class="label label-primary">${output.type} &nbsp; ${output.status}</span>
+		<span class="glyphicon glyphicon-refresh"></span>
 		</c:when>
 		<c:when test = "${output.status == 'Fail'}">
-		<span class="label label-warning">${output.type} &nbsp; ${output.status}</span>
+		<span class="glyphicon glyphicon-remove"></span>
 		</c:when>
 		<c:otherwise>
-		<span class="label label-success">${output.type} &nbsp;    ${output.status}</span>
+		<span class="glyphicon glyphicon-ok"></span>
 		</c:otherwise>
 		</c:choose>
 		</c:forEach>
