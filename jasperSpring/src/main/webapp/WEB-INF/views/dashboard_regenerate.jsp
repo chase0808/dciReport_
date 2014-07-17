@@ -42,10 +42,6 @@ pageEncoding="ISO-8859-1"%>
 		show: true
 		});
 		
-		$('#selected').attr('checked','checked');
-		var deptname = $('#selected').parent("label").text();
-		var txt1 = "<p class = " + value +">" + deptname + "</p>";
-		$("#selectedClient").append(txt1);
 		});
 		
 		$(document).ready(function(){
@@ -70,11 +66,7 @@ pageEncoding="ISO-8859-1"%>
         });
         
         
-		$("input[type='checkbox'][checked = 'true'][id!='_output']").each(function() {
-		//alert($(this).closest("li").attr('id'));
-		expandTree(tree1);
-		//expandToItem( ,$(this).closest("li").attr('id'));
-		});
+		
 		
 		$(".deletedialog").click(function(){
 					var hrefvalue = $(this).attr('id');
@@ -88,9 +80,7 @@ pageEncoding="ISO-8859-1"%>
 		//$('form').find('input[type=date], input[type=checkbox], input[type=number], input[type=email], textarea').val('');
 		});
 		
-		$('#myModal').on('show.bs.modal', function (e) {
-		expandTree(tree1);
-		});
+		
 		
 		
 		$("input[type='checkbox'][id!='_output']").change(function(){
@@ -98,9 +88,22 @@ pageEncoding="ISO-8859-1"%>
 		var deptname = $(this).parent("label").text();
 		if(this.checked){
 		var txt1 = "<p class = " + value +">" + deptname + "</p>";
+		
 		$("#selectedClient").append(txt1);
+		//alert($("#selectedClient").html());
 		} else {
-		$("p").remove("." + value);
+		alert($("#selectedClient").html());
+		alert(value);
+		//$("p").remove("." + value);
+		
+		try {
+				$("p").remove("." + value);
+			}
+		catch (err){
+		
+			alert(err);
+		}
+			
 		}
 		});
 		});
@@ -227,7 +230,7 @@ pageEncoding="ISO-8859-1"%>
 													</c:when>
 													<c:otherwise>
 													
-												<form:checkbox path="para[${i.index}].value" value= " ${department.departmentID}"></form:checkbox>
+												<form:checkbox path="para[${i.index}].value" value= "${department.departmentID}" name="dept"></form:checkbox>
 												<form:hidden path="para[${i.index}].id" value="${parameters.id}"></form:hidden>
 											
 											
