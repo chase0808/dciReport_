@@ -28,6 +28,7 @@ pageEncoding="ISO-8859-1"%>
 		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 		<script type="text/javascript" src="<c:url value = "/resources/js/mktree.js" />"></script>
 		<script type="text/javascript" src="<c:url value = "/resources/js/jquery.simplePagination.js" />"></script>
+		<script type="text/javascript" src="<c:url value = "/resources/js/deleteAjax.js" />"></script>
 		<style type="text/css">
 		.list-of-transactions
 		{
@@ -65,9 +66,13 @@ pageEncoding="ISO-8859-1"%>
         });
 		
 		$(".deletedialog").click(function(){
-					var hrefvalue = $(this).attr('id');
-					$("#btnConfirm").attr('href', hrefvalue);
-				});
+			var url = $(this).attr('id');
+			var id = $(this).attr('name');
+			//$("#btnConfirm").attr('href', hrefvalue);
+			$("#btnConfirm").click(function(){
+				deleteTransaction(url, id);
+			});
+		});
 		$('#myModal').on('hidden.bs.modal', function (e) {
 		//alert("show event fired!");
 		$(this).find('form')[0].reset();
@@ -313,7 +318,7 @@ Generate New Report <span class="caret"></span>
 </thead>
 <tbody>
 <c:forEach var = "transaction" items = "${transactionList}">
-<tr>
+<tr id="${transaction.id}">
 	<td>${transaction.name}</td>
 	<td>${transaction.date}</td>
 	<td>
@@ -342,7 +347,7 @@ Generate New Report <span class="caret"></span>
 	<a  href="/report/uitest3?transactionID=${transaction.id}" class="btn btn-default btn-xs" role="button">Generate</a>
 </td>
 <td>
-	<a  data-target="#delete-dialog" class="btn btn-danger btn-xs deletedialog" role="button" data-toggle="modal" id="/report/delete?transactionID=${transaction.id}" >delete</a>
+	<a  data-target="#delete-dialog" class="btn btn-danger btn-xs deletedialog" role="button" data-toggle="modal" id="/report/delete?transactionID=${transaction.id}" name="${transaction.id}">delete</a>
 </td>
 </tr>
 </c:forEach>
