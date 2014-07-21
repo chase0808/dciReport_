@@ -92,8 +92,7 @@ pageEncoding="ISO-8859-1"%>
 		$("#selectedClient").append(txt1);
 		//alert($("#selectedClient").html());
 		} else {
-		alert($("#selectedClient").html());
-		alert(value);
+		
 		//$("p").remove("." + value);
 		
 		try {
@@ -101,7 +100,7 @@ pageEncoding="ISO-8859-1"%>
 			}
 		catch (err){
 		
-			alert(err);
+		
 		}
 			
 		}
