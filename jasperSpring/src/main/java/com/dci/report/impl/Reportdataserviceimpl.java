@@ -156,11 +156,11 @@ public class Reportdataserviceimpl implements Reportdataservice {
 	}
 
 	@Override
-	public Map<String, List<Integer>> reportOutputIDMap() {
-		Map<String, List<Integer>> reportToOutputID = new HashMap<String, List<Integer>>();
-		String sql = "select a.name as reportname, c.id as outputid from jasreport.treport a inner join jasreport.treporttooutput b on a.id = b.reportid inner join jasreport.toutput c on b.outputid = c.id";
+	public Map<String, List<Reportoutput>> reportOutputMap() {
+		Map<String, List<Reportoutput>> reportToOutputID = new HashMap<String, List<Reportoutput>>();
+		String sql = "select * from jasreport.treport a inner join jasreport.treporttooutput b on a.id = b.reportid inner join jasreport.toutput c on b.outputid = c.id";
 		reportToOutputID = new JdbcTemplate(reportdatasource).query(sql,
-				new ReportOutputIDExtractor());
+				new ReportOutputExtractor());
 		return reportToOutputID;
 	}
 
@@ -180,11 +180,12 @@ public class Reportdataserviceimpl implements Reportdataservice {
 		int tid = jdbcTemplateObject.queryForInt(sql);
 		return tid;
 	}
-	
+
+	@Override
 	public void updateStatus(int transactionid) {
 		String status = "Done";
 		String sql = "update jasreport.ttransactionoutput set status = ? where transactionid = ?";
-		int result =jdbcTemplateObject.update(sql,status, transactionid);
+		int result = jdbcTemplateObject.update(sql, status, transactionid);
 	}
 
 }

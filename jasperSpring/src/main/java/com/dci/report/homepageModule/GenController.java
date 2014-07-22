@@ -25,13 +25,13 @@ public class GenController {
 	public String genbillingdetail(ModelMap model) {
 		Transaction transaction = (Transaction) model.get("transaction");
 		String path = genbillingdetail.generatereport(transaction);
-		return "redirect:uitest";
+		return "redirect:homepage";
 	}
 
 	@RequestMapping(value = "/genbillingsummary", method = RequestMethod.GET)
 	public String genbillingsummary(ModelMap model) {
 		Transaction transaction = (Transaction) model.get("transaction");
 		String path = genbillingsummary.generatereport(transaction);
-		return "redirect:uitest";
+		return "redirect:homepage";
 	}
 }
