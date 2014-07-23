@@ -108,7 +108,7 @@ public class HomeController {
 
 		html += "<form id=\"command\" role=\"form\" commandname=\"departments\" action=\"/report/generate\" method=\"POST\" onsubmit=\"return validate();\">\n";
 		html += "<div class=\"form-group\">";
-		html += "<input id=\"reportid\" name=\"reportid\" value=\"0\" type=\"hidden\" value=\"0\"/>\n";
+		html += "<input id=\"reportid\" name=\"reportid\"  type=\"hidden\" value=\"" + reportID + "\"/>\n";
 		int count = 0;
 		for (Reportpara para : reportParaValue) {
 			int paraID = para.getId();
@@ -256,7 +256,7 @@ public class HomeController {
 
 		html += "<form id=\"command\" role=\"form\" commandname=\"departments\" action=\"/report/generate\" method=\"POST\" onsubmit=\"return validate();\">\n";
 		html += "<div class=\"form-group\">";
-		html += "<input id=\"reportid\" name=\"reportid\" value=\"0\" type=\"hidden\" value=\"0\"/>\n";
+		html += "<input id=\"reportid\" name=\"reportid\"  type=\"hidden\" value=\"" + reportID + "\"/>\n";
 		int count = 0;
 		for (Reportpara para : reportpara) {
 			int paraId = para.getId();

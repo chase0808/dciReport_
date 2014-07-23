@@ -3,7 +3,7 @@
 	<property name = "src.dir" value = "src" />
 	<property name = "target.dir" value = "target" />
 	<property name = "webapp.dir" value = "${src.dir}/main/webapp" />
-	<property name = "lib.dir" value = "Libraries" />
+	<property name = "lib.dir" value = "lib" />
 	<target name = "build-war">
 		<war destfile = "jasperSpring.war" webxml = "${webapp.dir}/WEB-INF/web.xml">
 			<fileset dir = "${webapp.dir}">
