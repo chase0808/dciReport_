@@ -1,0 +1,21 @@
+<?xml version = "1.0" ?>
+<project name = "jasperSpring" basedir = "." default = "build-war">
+	<property name = "src.dir" value = "src" />
+	<property name = "target.dir" value = "target" />
+	<property name = "webapp.dir" value = "${src.dir}/main/webapp" />
+	<property name = "lib.dir" value = "Libraries" />
+	<target name = "build-war">
+		<war destfile = "jasperSpring.war" webxml = "${webapp.dir}/WEB-INF/web.xml">
+			<fileset dir = "${webapp.dir}">
+				<include name = "**/*.*"/>
+			</fileset>
+			<fileset dir = "${target.dir}/m2e-wtp/web-resources">
+				<include name = "**/*.*"/>
+			</fileset>
+			<lib dir = "${lib.dir}">
+				<include name = "**/*.*"/>
+			</lib>
+			<classes dir = "${target.dir}/classes" />
+		</war>
+	</target>
+</project>

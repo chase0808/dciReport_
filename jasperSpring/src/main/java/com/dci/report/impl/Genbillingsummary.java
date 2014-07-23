@@ -13,20 +13,17 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JRResultSetDataSource;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
-
 import com.dci.report.bean.Reportoutput;
 import com.dci.report.bean.Reportpara;
+import com.dci.report.bean.SummaryDataBean;
 import com.dci.report.bean.Transaction;
 import com.dci.report.services.Reportdataservice;
 import com.dci.report.services.Reportgenerateservice;
@@ -39,6 +36,8 @@ public class Genbillingsummary implements Reportgenerateservice {
 	private String path;
 	private String reportTypeName;
 	private String templatepath;
+	
+	
 
 	public String getTemplatepath() {
 		return templatepath;
@@ -92,47 +91,67 @@ public class Genbillingsummary implements Reportgenerateservice {
 		ResultSet resultSet = null;
 		CallableStatement stmt = null;
 		Connection c = null;
+		
+		System.out.println("I want the size of departmentid " + departmentid.size());
 		ArrayList<Reportoutput> arroutput = transaction.getArroutput();
 		String SQL = "CALL ZDBXUTIL01.SPR1_GETSUMMARYREPORT(?,?,?,?)";
-		try {
-
-			String idString = ",";
-
-			for (int i = 0; i < departmentid.size(); i++) {
-
-				idString = idString + "," + departmentid.get(i);
+		SummaryDataBeanList databeanlist = new SummaryDataBeanList();
+		for( int i = 0; i < departmentid.size(); i++ ) {
+			try {
+				c = dataSource.getConnection();
+				stmt = c.prepareCall(SQL);
+				stmt.setString(1, "");
+				stmt.setDate(2, sdate);
+				stmt.setDate(3, edate);
+				stmt.setString(4, departmentid.get(i));
+				System.out.println("I am in the loop, I am the departmentid! " + departmentid.get(i));
+				resultSet = stmt.executeQuery();
+				databeanlist.produce(resultSet);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if( resultSet != null ) {
+					try {
+						resultSet.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				if( stmt != null ) {
+					try {
+						stmt.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				if( c != null ) {
+					try {
+						c.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
 			}
-
-			idString = idString.replace(",,", "");
-
-			c = dataSource.getConnection();
-			stmt = c.prepareCall(SQL);
-			stmt.setString(1, "");
-			stmt.setDate(2, sdate);
-			stmt.setDate(3, edate);
-			stmt.setString(4, idString);
-			resultSet = stmt.executeQuery();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
+		System.out.println("I am out of the loop and I am going to render the report!");
+		ArrayList<SummaryDataBean> datalist = databeanlist.getDataBeanList();
+		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datalist, false);
 
-		JRResultSetDataSource ds = new JRResultSetDataSource(resultSet);
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("logoimage", templatepath + "dci.png");
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
-					jasperFilelocation, parameters, ds);
+					jasperFilelocation, parameters, beanColDataSource);
 			addPropertiesToJasperPrintForExcel(jasperPrint);
 			for (int i = 0; i < arroutput.size(); i++) {
 				switch (arroutput.get(i).getOutputid()) {
 				case 1:
-					createPdfReport(jasperPrint, arroutput.get(i), path);
+					createPdfReport(jasperPrint, arroutput.get(i));
 					reportdataservice.updateStatus(tid);
 					break;
 				case 2:
-					createXlsxReport(jasperPrint, arroutput.get(i), path);
-					createXlsReport(jasperPrint, arroutput.get(i), path);
+					createXlsReport(jasperPrint, arroutput.get(i));
 					reportdataservice.updateStatus(tid);
 					break;
 				}
@@ -144,8 +163,7 @@ public class Genbillingsummary implements Reportgenerateservice {
 		return path;
 	}
 
-	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output,
-			String path) {
+	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output) {
 		String outputname = output.getFilename();
 		String destination = path + "\\" + reportTypeName + "\\" + outputname + ".pdf";
 		try {
@@ -157,25 +175,7 @@ public class Genbillingsummary implements Reportgenerateservice {
 
 	}
 
-	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output,
-			String path) {
-		String outputname = output.getFilename();
-		String destination = path + "\\"+ reportTypeName + "\\" + outputname + ".xlsx";
-		try {
-			JRXlsxExporter xlsxexporter = new JRXlsxExporter();
-			xlsxexporter.setParameter(JRExporterParameter.JASPER_PRINT,
-					jasperPrint);
-			xlsxexporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME,
-					destination);
-			xlsxexporter.exportReport();
-			System.out.println("Xlsx Report generated");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output,
-			String path) {
+	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output) {
 		String outputname = output.getFilename();
 		String destination = path + "\\" + reportTypeName + "\\" + outputname + ".xls";
 		try {

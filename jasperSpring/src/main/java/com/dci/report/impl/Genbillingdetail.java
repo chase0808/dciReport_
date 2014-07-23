@@ -17,14 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JRResultSetDataSource;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
-
+import com.dci.report.bean.DetailDataBean;
 import com.dci.report.bean.Reportoutput;
 import com.dci.report.bean.Reportpara;
 import com.dci.report.bean.Transaction;
@@ -90,44 +89,60 @@ public class Genbillingdetail implements Reportgenerateservice {
 				+ " where b.fbookinstance_status in (2,7)  and fpagecount > 0"
 				+ " and date( b.ftimelastchanged ) between ? and  ? "
 				+ " and b.fclientid = ?" + " order by fbookstatus, fbook_type";
-		try {
-			//
-			// String idString =",";
-			//
-			// for (int i=0; i<departmentid.size(); i++) {
-			//
-			// idString= idString + "," + departmentid.get(i);
-			// }
-			//
-			// idString=idString.replace(",,","");
-
-			c = dataSource.getConnection();
-			stmt = c.prepareStatement(SQL);
-			stmt.setDate(1, sdate);
-			stmt.setDate(2, edate);
-			stmt.setString(3, "22");
-			resultSet = stmt.executeQuery();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
+		DetailDataBeanList databeanlist = new DetailDataBeanList();
+		for( int i = 0; i < departmentid.size(); i++ ) {
+			try {
+				c = dataSource.getConnection();
+				stmt = c.prepareCall(SQL);
+				stmt.setDate(1, sdate);
+				stmt.setDate(2, edate);
+				stmt.setString(3, "22");
+				System.out.println("I am in the loop, I am the departmentid! " + departmentid.get(i));
+				resultSet = stmt.executeQuery();
+				databeanlist.produce(resultSet);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if( resultSet != null ) {
+					try {
+						resultSet.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}				
+				if( stmt != null ) {
+					try {
+						stmt.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				if( c != null ) {
+					try {
+						c.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}
-
-		JRResultSetDataSource ds = new JRResultSetDataSource(resultSet);
+		System.out.println("I am out of the loop and I am going to render the report!");
+		ArrayList<DetailDataBean> datalist = databeanlist.getDataBeanList();
+		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(datalist, false);
 		try {
 			Map<String, Object> parameters = new HashMap<String, Object>();
 			parameters.put("logoimage", templatepath + "dci.png");
 			JasperPrint jasperPrint = JasperFillManager.fillReport(
-					jasperFilelocation, parameters, ds);
+					jasperFilelocation, parameters, beanColDataSource);
 			addPropertiesToJasperPrintForExcel(jasperPrint);
 			for (int i = 0; i < arroutput.size(); i++) {
 				switch (arroutput.get(i).getOutputid()) {
 				case 1:
-					createPdfReport(jasperPrint, arroutput.get(i), path);
+					createPdfReport(jasperPrint, arroutput.get(i));
 					reportdataservice.updateStatus(tid);
 					break;
 				case 2:
-					createXlsxReport(jasperPrint, arroutput.get(i), path);
-					createXlsReport(jasperPrint, arroutput.get(i), path);
+					createXlsReport(jasperPrint, arroutput.get(i));
 					reportdataservice.updateStatus(tid);
 					break;
 				}
@@ -139,8 +154,7 @@ public class Genbillingdetail implements Reportgenerateservice {
 		return path;
 	}
 
-	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output,
-			String path) {
+	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output) {
 		String outputname = output.getFilename();
 		String destination = path + "\\" + reportTypeName + "\\" + outputname + ".pdf";
 		try {
@@ -152,25 +166,7 @@ public class Genbillingdetail implements Reportgenerateservice {
 
 	}
 
-	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output,
-			String path) {
-		String outputname = output.getFilename();
-		String destination = path + "\\" + reportTypeName + "\\" + outputname + ".xlsx";
-		try {
-			JRXlsxExporter xlsxexporter = new JRXlsxExporter();
-			xlsxexporter.setParameter(JRExporterParameter.JASPER_PRINT,
-					jasperPrint);
-			xlsxexporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME,
-					destination);
-			xlsxexporter.exportReport();
-			System.out.println("Xlsx Report generated");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output,
-			String path) {
+	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output) {
 		String outputname = output.getFilename();
 		String destination = path + "\\" + reportTypeName + "\\" + outputname + ".xls";
 		try {
