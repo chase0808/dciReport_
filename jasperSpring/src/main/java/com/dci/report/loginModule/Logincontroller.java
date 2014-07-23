@@ -45,7 +45,7 @@ public class Logincontroller {
 			model.addAttribute("userid", userid);
 			String username = user.getUsername();
 			model.addAttribute("username", username);
-			return "redirect:uitest";
+			return "redirect:homepage";
 		} else {
 			return "redirect:login?error=invalidate";
 		}
