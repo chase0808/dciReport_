@@ -366,7 +366,8 @@ public class HomeController {
 		Transaction t1 = reportdataservice.getTransaction(tid);
 		model.addAttribute("transaction", t1);
 		String genMethod = t1.getGenMethod();
-
+		System.out.println("Report type " + t1.getName());
+		System.out.println(genMethod);
 		String output = "redirect:" + genMethod;
 		return output;
 
