@@ -59,9 +59,6 @@ public class HomeController {
 		modelandview.addObject("clientlist", clientList);
 		modelandview.addObject("transactionList", transactionList);
 		modelandview.addObject("reportTypeList", reportTypeList);
-		Transaction transaction = new Transaction();
-		modelandview.addObject("command", transaction);
-
 		return modelandview;
 	}
 
@@ -108,7 +105,8 @@ public class HomeController {
 
 		html += "<form id=\"command\" role=\"form\" commandname=\"departments\" action=\"/report/generate\" method=\"POST\" onsubmit=\"return validate();\">\n";
 		html += "<div class=\"form-group\">";
-		html += "<input id=\"reportid\" name=\"reportid\" value=\"0\" type=\"hidden\" value=\"0\"/>\n";
+		html += "<input id=\"reportid\" name=\"reportid\"  type=\"hidden\" value=\""
+				+ reportID + "\"/>\n";
 		int count = 0;
 		for (Reportpara para : reportParaValue) {
 			int paraID = para.getId();
@@ -234,6 +232,7 @@ public class HomeController {
 	public String getReportType(
 			@RequestParam("reportTypeName") String reportTypename,
 			ModelAndView model) {
+		System.out.println("RTN: " + reportTypename);
 		List<Client> clientList = (reporthandleservice.getClientMap());
 		Transaction transaction = new Transaction();
 		model.addObject("command", transaction);
@@ -242,6 +241,7 @@ public class HomeController {
 		Map<String, List<Reportoutput>> reportToOutput = reportdataservice
 				.reportOutputMap();
 		int reportID = reportdataservice.getReportID(reportTypename);
+		System.out.println("RID" + reportID);
 		List<Reportoutput> outputs = reportToOutput.get(reportTypename);
 		List<Reportpara> reportpara = reportToPara.get(reportTypename);
 
@@ -256,7 +256,8 @@ public class HomeController {
 
 		html += "<form id=\"command\" role=\"form\" commandname=\"departments\" action=\"/report/generate\" method=\"POST\" onsubmit=\"return validate();\">\n";
 		html += "<div class=\"form-group\">";
-		html += "<input id=\"reportid\" name=\"reportid\" value=\"0\" type=\"hidden\" value=\"0\"/>\n";
+		html += "<input id=\"reportid\" name=\"reportid\" type=\"hidden\" value=\""
+				+ reportID + "\"/>\n";
 		int count = 0;
 		for (Reportpara para : reportpara) {
 			int paraId = para.getId();
@@ -354,11 +355,12 @@ public class HomeController {
 
 	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public String generate(Transaction transaction, ModelMap model) {
-		for (int i = 0; i < transaction.getPara().size(); i++) {
-			System.out.println(transaction.getPara().get(i).getValue()
-					.toString());
+		// for (int i = 0; i < transaction.getPara().size(); i++) {
+		// System.out.println(transaction.getPara().get(i).getValue()
+		// .toString());
+		//
+		// }
 
-		}
 		int userid = (Integer) model.get("userid");
 		transaction.setUserid(userid);
 		reportdataservice.create(transaction);
@@ -366,8 +368,8 @@ public class HomeController {
 		Transaction t1 = reportdataservice.getTransaction(tid);
 		model.addAttribute("transaction", t1);
 		String genMethod = t1.getGenMethod();
-
 		String output = "redirect:" + genMethod;
+
 		return output;
 
 	}

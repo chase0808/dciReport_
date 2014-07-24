@@ -105,27 +105,29 @@ pageEncoding="ISO-8859-1"%>
 		$("p").remove("." + value);
 		}
 		});
-		
-		
-		/*$("input[type='checkbox'][id !='_output']").change(function(){
-		alert("hello test");
-		var value = $(this).val();
-		var dept = $(this).parent("label").text();
-		if(this.checked){
-		var txt1 = "<p class = " + value +">" + dept + "</p>";
-		$("#selectedClient").append(txt1);
-		} else {
-		$("p").remove("." + value);
-		}
-		
-		
-		});*/
-		
-		
-			
-			
-			
-			
+		/*
+		$("#genmodalbody").on("submit", "#command", function(event){
+			 alert("!!!");
+		     
+    		 var formURL = '/report/generate';
+    		 var postData = $(this).serializeArray();
+   			 $.ajax(
+    		 {
+        		url : formURL,
+       			type: "POST",
+        		success:function(data) 
+        		{
+                   alert(data + "!!");
+                   $("#history").append(data); 
+                   $('#generate-dialog').modal('hide');
+        		},
+       			 error: function(jqXHR, textStatus, errorThrown) 
+        		{
+                     alert("fail");
+       			}
+    		});
+		   
+        });*/			
 });
 
 
@@ -268,7 +270,7 @@ pageEncoding="ISO-8859-1"%>
 								<th>Delete</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="history">
 							<c:forEach var = "transaction" items = "${transactionList}">
 								<tr id="${transaction.id}">
 									<td>${transaction.name}</td>

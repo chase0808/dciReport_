@@ -1,5 +1,6 @@
 package com.dci.report.impl;
 
+import java.io.File;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -144,7 +145,12 @@ public class Genbillingsummary implements Reportgenerateservice {
 	private void createPdfReport(JasperPrint jasperPrint, Reportoutput output,
 			String path) {
 		String outputname = output.getFilename();
-		String destination = path + "\\Billing Summary\\" + outputname + ".pdf";
+		String destination = null;
+		File f = new File(path + "\\Billing Summary\\");
+		if (!f.exists()) {
+			f.mkdir();
+		}
+		destination = path + "\\Billing Summary\\" + outputname + ".pdf";
 		try {
 			JasperExportManager.exportReportToPdfFile(jasperPrint, destination);
 		} catch (JRException e) {
@@ -157,8 +163,12 @@ public class Genbillingsummary implements Reportgenerateservice {
 	private void createXlsxReport(JasperPrint jasperPrint, Reportoutput output,
 			String path) {
 		String outputname = output.getFilename();
-		String destination = path + "\\Billing Summary\\" + outputname
-				+ ".xlsx";
+		String destination = null;
+		File f = new File(path + "\\Billing Summary\\");
+		if (!f.exists()) {
+			f.mkdir();
+		}
+		destination = path + "\\Billing Summary\\" + outputname + ".xlsx";
 		try {
 			JRXlsxExporter xlsxexporter = new JRXlsxExporter();
 			xlsxexporter.setParameter(JRExporterParameter.JASPER_PRINT,
@@ -175,7 +185,12 @@ public class Genbillingsummary implements Reportgenerateservice {
 	private void createXlsReport(JasperPrint jasperPrint, Reportoutput output,
 			String path) {
 		String outputname = output.getFilename();
-		String destination = path + "\\Billing Summary\\" + outputname + ".xls";
+		String destination = null;
+		File f = new File(path + "\\Billing Summary\\");
+		if (!f.exists()) {
+			f.mkdir();
+		}
+		destination = path + "\\Billing Summary\\" + outputname + ".xls";
 		try {
 			JRXlsExporter exporter = new JRXlsExporter();
 			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
