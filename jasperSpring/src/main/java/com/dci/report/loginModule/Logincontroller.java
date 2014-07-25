@@ -35,7 +35,7 @@ public class Logincontroller {
 		}
 		return modelandview;
 	}
-
+	
 	@RequestMapping(value = "/logining", method = RequestMethod.POST)
 	public String login(@ModelAttribute("SpringWeb") User user, ModelMap model) {
 

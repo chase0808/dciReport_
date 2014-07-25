@@ -6,7 +6,6 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 
 
-
 	<bean id="summaryreportdaoservice" class="com.dci.report.impl.Summaryreportdaoserviceimpl">
 
 		<property name="dataSource" ref="dataSource" />
@@ -22,10 +21,6 @@
 
 
 	</bean>
-
-
-
-
 
 
 
