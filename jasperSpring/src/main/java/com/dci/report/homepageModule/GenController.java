@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.dci.report.bean.Transaction;
 import com.dci.report.impl.Genbillingdetail;
 import com.dci.report.impl.Genbillingsummary;
+import com.dci.report.impl.Genweblog;
 import com.dci.report.services.Reportdataservice;
 
 @Controller
@@ -24,6 +25,9 @@ public class GenController {
 
 	@Autowired
 	Genbillingdetail genbillingdetail;
+	
+	@Autowired
+	Genweblog genweblog;
 
 	@RequestMapping(value = "/genbillingdeital", method = RequestMethod.GET)
 	public String genbillingdetail(ModelMap model) {
@@ -138,6 +142,13 @@ public class GenController {
 		// html += "</td>\n";
 		// html += "</tr>";
 		// System.out.println(html);
+		return "redirect: homepage";
+	}
+	
+	@RequestMapping(value = "/genweblog", method = RequestMethod.GET)
+	public String genweblog(ModelMap model) {
+		Transaction transaction = (Transaction) model.get("transaction");
+		String path = genweblog.generatereport(transaction);
 		return "redirect: homepage";
 	}
 }
