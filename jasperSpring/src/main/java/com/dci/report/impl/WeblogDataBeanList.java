@@ -13,7 +13,7 @@ public class WeblogDataBeanList {
 		WeblogDataBean db = new WeblogDataBean();
 		while( rs.next() ) {
 			db.setCLIENTIPADDRESS(rs.getString("CLIENTIPADDRESS"));
-			db.setREQUESTTIMESTAMP(rs.getString("TIMESTAMP"));
+			db.setREQUESTTIMESTAMP(rs.getString("REQUESTTIMESTAMP"));
 			dataBeanList.add(db);
 			db = new WeblogDataBean();
 		}

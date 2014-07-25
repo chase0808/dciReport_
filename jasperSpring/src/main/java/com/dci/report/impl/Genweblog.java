@@ -86,8 +86,8 @@ public class Genweblog implements Reportgenerateservice {
 		PreparedStatement stmt = null;
 		Connection c = null;
 		ArrayList<Reportoutput> arroutput = transaction.getArroutput();
-		String SQL = "select CLIENTIPADDRESS, REQUESTTIMESTAMP from loginfo.tloginfo where REQUESTMETHOD = ?";
-
+		String SQL = "select CLIENTIPADDRESS, REQUESTTIMESTAMP from loginfo.tloginfo where REQUESTMETHOD = ? and REQUESTTIMESTAMP = '[11/Apr/2011:09:10:24 -0400]'";
+		System.out.println(requestmethod);
 		WeblogDataBeanList databeanlist = new WeblogDataBeanList();
 		try {
 			c = dataSource.getConnection();

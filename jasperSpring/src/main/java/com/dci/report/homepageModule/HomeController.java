@@ -278,7 +278,7 @@ public class HomeController {
 			switch (paraId) {
 			case 1:
 				html += "<input id=\"para" + count + ".id\" name=\"para["
-						+ count + "].id\" value=\"" + (count + 1)
+						+ count + "].id\" value=\"" + paraId
 						+ "\" type=\"hidden\" value=\"" + (count + 1)
 						+ "\"/>\n";
 				html += "<label for=\"start_date\">Start Date</label>\n";
@@ -288,7 +288,7 @@ public class HomeController {
 				break;
 			case 2:
 				html += "<input id=\"para" + count + ".id\" name=\"para["
-						+ count + "].id\" value=\"" + (count + 1)
+						+ count + "].id\" value=\"" + paraId
 						+ "\" type=\"hidden\" value=\"" + (count + 1)
 						+ "\"/>\n";
 				html += "<label for=\"end_date\">End Date</label>\n";
@@ -320,7 +320,7 @@ public class HomeController {
 								+ count + "].value\" value=\"on\"/>\n";
 						html += "<input id=\"para" + count
 								+ ".id\" name=\"para[" + count
-								+ "].id\" value=\"" + (count + 1)
+								+ "].id\" value=\"" + paraId
 								+ "\" type=\"hidden\" value=\"" + (count + 1)
 								+ "\"/>\n";
 						html += "</label>\n</li>\n</ul>\n";
@@ -346,8 +346,12 @@ public class HomeController {
 						+ count
 						+ "].value\" name=\"dept\" type=\"checkbox\" value=\""
 						+ "GET"
-						+ "\" onchange=\"\" /><input type=\"hidden\" name=\"_para["
-						+ count + "].value\" value=\"on\"/>" + "GET" + "\n";
+						+ "\" onchange=\"\" />" + "GET" + "\n";
+				html += "<input id=\"para" + count
+						+ ".id\" name=\"para[" + count
+						+ "].id\" value=\"" + paraId
+						+ "\" type=\"hidden\" value=\"" + (count + 1)
+						+ "\"/>\n";
 				html += "</label>\n";
 				html += "<label class=\"checkbox-inline\">\n";
 				html += "<input id=\"para"
@@ -358,8 +362,12 @@ public class HomeController {
 						+ count
 						+ "].value\" name=\"dept\" type=\"checkbox\" value=\""
 						+ "POST"
-						+ "\" onchange=\"\" /><input type=\"hidden\" name=\"_para["
-						+ count + "].value\" value=\"on\"/>" + "POST" + "\n";
+						+ "\" onchange=\"\" />" + "POST" + "\n";
+				html += "<input id=\"para" + count
+				+ ".id\" name=\"para[" + count
+				+ "].id\" value=\"" + paraId
+				+ "\" type=\"hidden\" value=\"" + (count + 1)
+				+ "\"/>\n";
 				html += "</label>\n";
 				break;
 			}
