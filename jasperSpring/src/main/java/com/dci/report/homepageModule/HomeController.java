@@ -1,3 +1,4 @@
+
 package com.dci.report.homepageModule;
 
 import java.io.File;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -394,7 +396,7 @@ public class HomeController {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		System.out.println("fileName:" + fileName);
-		// ServletContext context = request.getSession().getServletContext();
+		 ServletContext context = request.getSession().getServletContext();
 		// String appPath = context.getRealPath("");
 		// System.out.println("appPath = " + appPath);
 		// String fullPath = appPath + fileName;
@@ -402,22 +404,22 @@ public class HomeController {
 		FileInputStream inputStream = new FileInputStream(downloadFile);
 
 		// get MIME type of the file
-		// String mimeType = context.getMimeType(fullPath);
-		// if (mimeType == null) {
-		// // set to binary type if MIME mapping not found
-		// mimeType = "application/octet-stream";
-		// }
-		// System.out.println("MIME type: " + mimeType);
+		 String mimeType = context.getMimeType(fileName);
+		 if (mimeType == null) {
+		 // set to binary type if MIME mapping not found
+		 mimeType = "application/octet-stream";
+		 }
+		 System.out.println("MIME type: " + mimeType);
 
 		// set content attributes for the response
-		// response.setContentType(mimeType);
-		// response.setContentLength((int) downloadFile.length());
+		 response.setContentType(mimeType);
+		 response.setContentLength((int) downloadFile.length());
 
 		// set headers for the response
-		// String headerKey = "Content-Disposition";
-		// String headerValue = String.format("attachment; filename=\"%s\"",
-		// downloadFile.getName());
-		// response.setHeader(headerKey, headerValue);
+		 String headerKey = "Content-Disposition";
+		 String headerValue = String.format("attachment; filename=\"%s\"",
+		 downloadFile.getName());
+		 response.setHeader(headerKey, headerValue);
 
 		// get output stream of the response
 		OutputStream outStream = response.getOutputStream();

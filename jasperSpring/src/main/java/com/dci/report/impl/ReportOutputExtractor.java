@@ -20,20 +20,20 @@ public class ReportOutputExtractor implements ResultSetExtractor {
 		Map<String, List<Reportoutput>> reportToOutput = new HashMap<String, List<Reportoutput>>();
 		int count = 0;
 		String reportType;
-		String temp = null;
+		
 		while (resultset.next()) {
 			Reportoutput reportoutput = new Reportoutput();
 			reportType = resultset.getString("name");
 			if (count == 0) {
 				reportToOutput.put(reportType, new ArrayList<Reportoutput>());
 
-			} else if (!temp.equals(reportType)) {
+			} else if (!reportToOutput.containsKey(reportType)) {
 				reportToOutput.put(reportType, new ArrayList<Reportoutput>());
 			}
 			reportoutput.setOutputid(resultset.getInt("outputid"));
 			reportoutput.setType(resultset.getString("type"));
 			reportToOutput.get(reportType).add(reportoutput);
-			temp = reportType;
+			
 			count++;
 
 		}
