@@ -1,9 +1,16 @@
 package com.dci.report.homepageModule;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +43,8 @@ public class HomeController {
 
 	@Autowired
 	Reporthandleservice reporthandleservice;
+
+	private static final int BUFFER_SIZE = 4096;
 
 	@RequestMapping(value = "/homepage", method = RequestMethod.GET)
 	public ModelAndView homepage(
@@ -380,6 +389,52 @@ public class HomeController {
 			ModelMap model) {
 		reportdataservice.delete(transactionID);
 		return "success";
+	}
+
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	public void doDownload(@RequestParam("fileName") String fileName,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		System.out.println("fileName:" + fileName);
+		// ServletContext context = request.getSession().getServletContext();
+		// String appPath = context.getRealPath("");
+		// System.out.println("appPath = " + appPath);
+		// String fullPath = appPath + fileName;
+		File downloadFile = new File(fileName);
+		FileInputStream inputStream = new FileInputStream(downloadFile);
+
+		// get MIME type of the file
+		// String mimeType = context.getMimeType(fullPath);
+		// if (mimeType == null) {
+		// // set to binary type if MIME mapping not found
+		// mimeType = "application/octet-stream";
+		// }
+		// System.out.println("MIME type: " + mimeType);
+
+		// set content attributes for the response
+		// response.setContentType(mimeType);
+		// response.setContentLength((int) downloadFile.length());
+
+		// set headers for the response
+		// String headerKey = "Content-Disposition";
+		// String headerValue = String.format("attachment; filename=\"%s\"",
+		// downloadFile.getName());
+		// response.setHeader(headerKey, headerValue);
+
+		// get output stream of the response
+		OutputStream outStream = response.getOutputStream();
+
+		byte[] buffer = new byte[BUFFER_SIZE];
+		int bytesRead = -1;
+
+		// write bytes read from the input stream into the output stream
+		while ((bytesRead = inputStream.read(buffer)) != -1) {
+			outStream.write(buffer, 0, bytesRead);
+		}
+
+		inputStream.close();
+		outStream.close();
+
 	}
 
 }
