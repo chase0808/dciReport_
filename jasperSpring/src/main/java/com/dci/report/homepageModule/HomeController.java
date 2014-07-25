@@ -250,9 +250,14 @@ public class HomeController {
 				.reportParaMap();
 		Map<String, List<Reportoutput>> reportToOutput = reportdataservice
 				.reportOutputMap();
+		System.out.println();
 		int reportID = reportdataservice.getReportID(reportTypename);
 		System.out.println("RID" + reportID);
 		List<Reportoutput> outputs = reportToOutput.get(reportTypename);
+		System.out.println("OID: ");
+		for (Reportoutput o : outputs) {
+			System.out.println(o.getOutputid());
+		}
 		List<Reportpara> reportpara = reportToPara.get(reportTypename);
 
 		transaction.setPara((ArrayList<Reportpara>) reportpara);
@@ -306,15 +311,12 @@ public class HomeController {
 					for (Department department : client.getDepartments()) {
 						html += "<ul>\n<li>\n<label>\n"
 								+ department.getDepartmentName() + "\n";
-						html += "<input id=\"para"
-								+ count
-								+ ".value"
-								+ departmentcount
-								+ "\" name=\"para["
-								+ count
-								+ "].value\" name=\"dept\" type=\"checkbox\" value=\""
+						html += "<input id=\"para" + count + ".value"
+
+						+ "\" name=\"para[" + count
+								+ "].value\"  type=\"checkbox\" value=\""
 								+ department.getDepartmentID()
-								+ "\" onchange=\"\" /><input type=\"hidden\" name=\"_para["
+								+ "\"  /><input type=\"hidden\" name=\"_para["
 								+ count + "].value\" value=\"on\"/>\n";
 						html += "<input id=\"para" + count
 								+ ".id\" name=\"para[" + count
@@ -334,8 +336,31 @@ public class HomeController {
 						+ "</div>\n</div>\n</div>\n</div>\n</div>\n";
 				break;
 			case 4:
-				html += "<label for=\"deadline\" path=\"reportpara.value\">Deadline</label>\n";
-				html += "<input type=\"date\" class=\"form-control\" id=\"deadline\"/>\n";
+				html += "<h4>Method</h4>\n";
+				html += "<label class=\"checkbox-inline\">\n";
+				html += "<input id=\"para"
+						+ count
+						+ ".value"
+						+ 1
+						+ "\" name=\"para["
+						+ count
+						+ "].value\" name=\"dept\" type=\"checkbox\" value=\""
+						+ "GET"
+						+ "\" onchange=\"\" /><input type=\"hidden\" name=\"_para["
+						+ count + "].value\" value=\"on\"/>" + "GET" + "\n";
+				html += "</label>\n";
+				html += "<label class=\"checkbox-inline\">\n";
+				html += "<input id=\"para"
+						+ count
+						+ ".value"
+						+ 1
+						+ "\" name=\"para["
+						+ count
+						+ "].value\" name=\"dept\" type=\"checkbox\" value=\""
+						+ "POST"
+						+ "\" onchange=\"\" /><input type=\"hidden\" name=\"_para["
+						+ count + "].value\" value=\"on\"/>" + "POST" + "\n";
+				html += "</label>\n";
 				break;
 			}
 			count++;
@@ -396,7 +421,9 @@ public class HomeController {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		System.out.println("fileName:" + fileName);
+
 		 ServletContext context = request.getSession().getServletContext();
+
 		// String appPath = context.getRealPath("");
 		// System.out.println("appPath = " + appPath);
 		// String fullPath = appPath + fileName;
@@ -404,6 +431,7 @@ public class HomeController {
 		FileInputStream inputStream = new FileInputStream(downloadFile);
 
 		// get MIME type of the file
+
 		 String mimeType = context.getMimeType(fileName);
 		 if (mimeType == null) {
 		 // set to binary type if MIME mapping not found
@@ -420,6 +448,7 @@ public class HomeController {
 		 String headerValue = String.format("attachment; filename=\"%s\"",
 		 downloadFile.getName());
 		 response.setHeader(headerKey, headerValue);
+
 
 		// get output stream of the response
 		OutputStream outStream = response.getOutputStream();

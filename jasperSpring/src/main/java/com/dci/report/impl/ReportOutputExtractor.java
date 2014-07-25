@@ -20,7 +20,7 @@ public class ReportOutputExtractor implements ResultSetExtractor {
 		Map<String, List<Reportoutput>> reportToOutput = new HashMap<String, List<Reportoutput>>();
 		int count = 0;
 		String reportType;
-		
+
 		while (resultset.next()) {
 			Reportoutput reportoutput = new Reportoutput();
 			reportType = resultset.getString("name");
@@ -33,7 +33,7 @@ public class ReportOutputExtractor implements ResultSetExtractor {
 			reportoutput.setOutputid(resultset.getInt("outputid"));
 			reportoutput.setType(resultset.getString("type"));
 			reportToOutput.get(reportType).add(reportoutput);
-			
+
 			count++;
 
 		}
