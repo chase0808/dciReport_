@@ -47,7 +47,7 @@
 
 	<bean id="reportdatasource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.ibm.as400.access.AS400JDBCDriver" />
-		<property name="url" value="jdbc:as400://zeus/jasreport;" />
+		<property name="url" value="jdbc:as400://192.168.200.4/jasreport;" />
 		<property name="username" value="DCIINTERN" />
 		<property name="password" value="qixin808" />
 	</bean>
@@ -59,21 +59,21 @@
 
 	<bean id="Genbillingsummary" class="com.dci.report.impl.Genbillingsummary">
 		<property name="dataSource" ref="dataSource" />
-		<property name="path" value="c:\\Temp\\"></property>
-		<property name="templatepath" value="C:\\Temp\\template\\"></property>
+		<property name="path" value="c://Temp//"></property>
+		<property name="templatepath" value="C://Temp//template//"></property>
 		<property name="reportdataservice" ref="reportdataservice"/>
 	</bean>
 	
 	<bean id="Genbillingdetail" class="com.dci.report.impl.Genbillingdetail">
 		<property name="dataSource" ref="dataSource" />
-		<property name="path" value="C:\\Temp\\"></property>
-		<property name="templatepath" value="C:\\Temp\\template\\"></property>
+		<property name="path" value="C://Temp//"></property>
+		<property name="templatepath" value="C://Temp//template//"></property>
 		<property name="reportdataservice" ref="reportdataservice"/>
 	</bean>
 	
 
 	<bean id="path" class="java.lang.String">
-    <constructor-arg value="C:\\Temp\\"/>
+    <constructor-arg value="C://temp//"/>
     </bean>
 
 </beans>
